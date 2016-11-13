@@ -38,7 +38,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="TeleOp", group="Shockwave")
+@TeleOp(name="Shockwave: TeleOp", group="Shockwave")
 //@Disabled
 public class ShockwaveDrive extends OpMode
 {
@@ -72,7 +72,7 @@ public class ShockwaveDrive extends OpMode
     public void start() {
         runtime.reset();
     }
-    
+
     @Override
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
