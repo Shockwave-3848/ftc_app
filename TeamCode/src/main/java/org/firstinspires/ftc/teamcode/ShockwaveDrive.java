@@ -106,6 +106,9 @@ public class ShockwaveDrive extends OpMode
         }else if(gamepad2.dpad_down){
             elevatorMotor.setPower(-0.25);
             telemetry.addData("Status", "Running: ", "Elevator Down");
+        }else{
+            telemetry.addData("Status", "Running: ", "Elevator Stopped");
+            elevatorMotor.setPower(0);
         }
 
         /* end elevator motor setting */
@@ -126,6 +129,9 @@ public class ShockwaveDrive extends OpMode
         /* launch motor setting*/
         if(gamepad2.right_trigger > 0.10) {
             //TODO: Rotate 360 degrees
+            launchMotor.setPower(1);
+        } else {
+            launchMotor.setPower(0);
         }
         /* end launch motor setting */
 
@@ -136,6 +142,9 @@ public class ShockwaveDrive extends OpMode
         }else if(gamepad2.dpad_down){ //TODO: Make autonomous positions using encoders
             liftMotor.setPower(-0.5);
             telemetry.addData("Status", "Running: ", "Lift Down");
+        }else{
+            liftMotor.setPower(0);
+            telemetry.addData("Status", "Running: ", "Lift Stopped");
         }
         /* end lift motor setting */
     }
