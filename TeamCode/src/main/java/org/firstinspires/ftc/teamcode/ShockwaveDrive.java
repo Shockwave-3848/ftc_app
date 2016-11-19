@@ -88,7 +88,7 @@ public class ShockwaveDrive extends OpMode
         rightMotor.setPower(rightPower);
         /* end drive motor setting */
 
-        /* elevator motor setting */
+        /* elevator motor setting */ /*
         if(gamepad2.y) { //TODO: Find positions for the motor
             //elevatorMotor.setTargetPosition(POSITION);
             telemetry.addData("Status", "Running: ", "Elevator Up");
@@ -98,16 +98,16 @@ public class ShockwaveDrive extends OpMode
         }else if(gamepad2.right_bumper) {
             //elevatorMotor.setTargetPosition(POSITION);
             telemetry.addData("Status", "Running: ", "Elevator Stow");
-        }
-        /*  //////////OLD CODE//////////
+        } */
+          //////////OLD CODE//////////
         if(gamepad2.dpad_up) {
-            elevatorMotor.setPower(0.5);
+            elevatorMotor.setPower(0.25);
             telemetry.addData("Status", "Running: ", "Elevator Up");
         }else if(gamepad2.dpad_down){
-            elevatorMotor.setPower(-0.5);
+            elevatorMotor.setPower(-0.25);
             telemetry.addData("Status", "Running: ", "Elevator Down");
         }
-        */
+
         /* end elevator motor setting */
 
         /* less than 80% half-speed mapping*/
