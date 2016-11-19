@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="Shockwave: TeleOp", group="Shockwave")
@@ -44,11 +45,14 @@ public class ShockwaveDrive extends OpMode
 {
     private ElapsedTime runtime = new ElapsedTime();
 
-    HardwareMap map = hardwareMap;
+    private HardwareMap map = hardwareMap;
 
     private DcMotor leftMotor = null;
     private DcMotor rightMotor = null;
     private DcMotor elevatorMotor = null;
+    private DcMotor launchMotor = null;
+    private DcMotor liftMotor = null;
+    public Servo forkLift = null;
 
     private float leftPower = 0;
     private float rightPower = 0;
@@ -58,6 +62,9 @@ public class ShockwaveDrive extends OpMode
         leftMotor = map.dcMotor.get("leftMotor");
         rightMotor = map.dcMotor.get("rightMotor");
         elevatorMotor = map.dcMotor.get("elevatorMotor");
+        launchMotor = map.dcMotor.get("launchMotor");
+        liftMotor = map.dcMotor.get("liftMotor");
+        forkLift = map.servo.get("forkLift");
         leftMotor.setDirection(DcMotor.Direction.FORWARD);
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
         elevatorMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -80,13 +87,29 @@ public class ShockwaveDrive extends OpMode
         leftMotor.setPower(leftPower);
         rightMotor.setPower(rightPower);
         /* end drive motor setting */
+
         /* elevator motor setting */
+        if(gamepad2.y) { //TODO: Find positions for the motor
+            //elevatorMotor.setTargetPosition(POSITION);
+            telemetry.addData("Status", "Running: ", "Elevator Up");
+        }else if(gamepad2.a) {
+            //elevatorMotor.setTargetPosition(POSITION);
+            telemetry.addData("Status", "Running: ", "Elevator Down");
+        }else if(gamepad2.right_bumper) {
+            //elevatorMotor.setTargetPosition(POSITION);
+            telemetry.addData("Status", "Running: ", "Elevator Stow");
+        }
+        /*  //////////OLD CODE//////////
         if(gamepad2.dpad_up) {
             elevatorMotor.setPower(0.5);
-        }else if(gamepad2.dpad_down){ //TODO: Make autonomous positions using encoders
+            telemetry.addData("Status", "Running: ", "Elevator Up");
+        }else if(gamepad2.dpad_down){
             elevatorMotor.setPower(-0.5);
+            telemetry.addData("Status", "Running: ", "Elevator Down");
         }
+        */
         /* end elevator motor setting */
+
         /* less than 80% half-speed mapping*/
         if(gamepad1.left_stick_y < 0.8){
             leftPower = gamepad1.left_stick_y/2;
@@ -99,6 +122,22 @@ public class ShockwaveDrive extends OpMode
             rightPower = gamepad1.right_stick_y;
         }
         /* end less than 80% half-speed mapping */
+
+        /* launch motor setting*/
+        if(gamepad2.right_trigger > 0.10) {
+            //TODO: Rotate 360 degrees
+        }
+        /* end launch motor setting */
+
+        /* lift motor setting */
+        if(gamepad2.dpad_up) {
+            liftMotor.setPower(0.5);
+            telemetry.addData("Status", "Running: ", "Lift Up");
+        }else if(gamepad2.dpad_down){ //TODO: Make autonomous positions using encoders
+            liftMotor.setPower(-0.5);
+            telemetry.addData("Status", "Running: ", "Lift Down");
+        }
+        /* end lift motor setting */
     }
 
     @Override
@@ -106,5 +145,4 @@ public class ShockwaveDrive extends OpMode
         leftMotor.setPower(0);
         rightMotor.setPower(0);
     }
-
 }
