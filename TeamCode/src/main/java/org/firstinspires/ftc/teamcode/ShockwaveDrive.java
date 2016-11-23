@@ -38,6 +38,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import static android.os.SystemClock.sleep;
+
 @TeleOp(name="Shockwave: TeleOp", group="Shockwave")
 //@Disabled
 public class ShockwaveDrive extends OpMode
@@ -49,10 +51,13 @@ public class ShockwaveDrive extends OpMode
     private DcMotor elevatorMotor = null;
     private DcMotor launchMotor = null;
     private DcMotor liftMotor = null;
+    private DcMotor leftFlicker = null;
+    private DcMotor rightFlicker = null;
     public Servo forkliftServo = null;
 
     private float leftPower = 0;
     private float rightPower = 0;
+    int launchVar = 0;
 
     @Override
     public void init() {
@@ -62,10 +67,15 @@ public class ShockwaveDrive extends OpMode
         launchMotor = hardwareMap.dcMotor.get("launchMotor");
         liftMotor = hardwareMap.dcMotor.get("liftMotor");
         forkliftServo = hardwareMap.servo.get("forkliftServo");
+        leftFlicker = hardwareMap.dcMotor.get("leftFlicker");
+        rightFlicker = hardwareMap.dcMotor.get("rightFlicker");
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
         elevatorMotor.setDirection(DcMotor.Direction.FORWARD);
         launchMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightFlicker.setDirection(DcMotor.Direction.REVERSE); //TODO Test to see which flicker needs to be reversed, left or right.  I made right reversed for now, but that is temperary until testing
+        launchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        launchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         telemetry.addData("Status", "Initialized");
     }
 
@@ -126,13 +136,13 @@ public class ShockwaveDrive extends OpMode
 
         /* launch motor setting*/
         if(gamepad2.right_trigger > 0.10) {
-            //TODO: Rotate 360 degrees
+            launchVar += 100;
             launchMotor.setPower(1);
-        } else {
-            launchMotor.setPower(0);
+            launchMotor.setTargetPosition(launchVar);
+            sleep(300);
         }
+        telemetry.addData("launchMotor", launchMotor.getTargetPosition());
         /* end launch motor setting */
-
         /* lift motor setting */
         if(gamepad2.dpad_up) {
             liftMotor.setPower(0.5);
@@ -145,6 +155,16 @@ public class ShockwaveDrive extends OpMode
             telemetry.addData("Status", "Running: ", "Lift Stopped");
         }
         /* end lift motor setting */
+
+        /* flicker motor setting */ //TODO get this to work
+        /*if(gamepad2.left_bumper) {
+            leftFlicker.setPower(1);
+            rightFlicker.setPower(1);
+        } else if(gamepad2.left_trigger) {
+            leftFlicker.setPower(0);
+            rightFlicker.setPower(0);
+        }*/
+        /* end flicker motor setting */
     }
 
     @Override
