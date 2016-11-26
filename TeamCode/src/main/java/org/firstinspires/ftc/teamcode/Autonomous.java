@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Shockwave: Autonomous", group="Shockwave")  // @Autonomous(...) is the other common choice
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Shockwave: Autonomous 2016 VelVort", group="Shockwave")  // @Autonomous(...) is the other common choice
 public class Autonomous extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -72,9 +72,9 @@ public class Autonomous extends LinearOpMode {
         forkliftServo = hardwareMap.servo.get("forkliftServo");
         leftFlicker = hardwareMap.dcMotor.get("leftFlicker");
         rightFlicker = hardwareMap.dcMotor.get("rightFlicker");
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightMotor.setDirection(DcMotor.Direction.FORWARD);
-        elevatorMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        elevatorMotor.setDirection(DcMotor.Direction.REVERSE);
         launchMotor.setDirection(DcMotor.Direction.REVERSE);
         rightFlicker.setDirection(DcMotor.Direction.REVERSE);
         telemetry.addData("Status", "Initialized");
@@ -83,14 +83,14 @@ public class Autonomous extends LinearOpMode {
         runtime.reset();
         leftMotor.setPower(0.5);
         rightMotor.setPower(0.5);
-        sleep(2000);
+        sleep(750);
         leftMotor.setPower(0);
         rightMotor.setPower(0);
         elevatorMotor.setPower(-0.25);
-        sleep(1500);
+        sleep(1000);
         elevatorMotor.setPower(0);
         launchMotor.setPower(1);
-        sleep(2000);
+        sleep(1000);
         launchMotor.setPower(0);
 
 
@@ -98,5 +98,8 @@ public class Autonomous extends LinearOpMode {
             telemetry.addData("Status", "Running: " + runtime.toString());
             telemetry.update();
         }
+    }
+    double driveInches(float inches){
+        return (inches/(4*Math.PI))*1440;
     }
 }

@@ -40,7 +40,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import static android.os.SystemClock.sleep;
 
-@TeleOp(name = "Shockwave: TeleOp", group = "Shockwave")
+@TeleOp(name = "Shockwave: TeleOp 2016 VelVort", group = "Shockwave")
 //@Disabled
 public class ShockwaveDrive extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
