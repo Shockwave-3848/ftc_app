@@ -40,10 +40,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import static android.os.SystemClock.sleep;
 
-@TeleOp(name="Shockwave: TeleOp", group="Shockwave")
+@TeleOp(name = "Shockwave: TeleOp", group = "Shockwave")
 //@Disabled
-public class ShockwaveDrive extends OpMode
-{
+public class ShockwaveDrive extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     private DcMotor leftMotor = null;
@@ -57,6 +56,7 @@ public class ShockwaveDrive extends OpMode
 
     private float leftPower = 0;
     private float rightPower = 0;
+    boolean flicker = false;
     int launchVar = 0;
 
     @Override
@@ -73,7 +73,7 @@ public class ShockwaveDrive extends OpMode
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
         elevatorMotor.setDirection(DcMotor.Direction.FORWARD);
         launchMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightFlicker.setDirection(DcMotor.Direction.REVERSE); //TODO Test to see which flicker needs to be reversed, left or right.  I made right reversed for now, but that is temperary until testing
+        rightFlicker.setDirection(DcMotor.Direction.REVERSE); //TODO Test to see which flicker needs to be reversed, left or right.  I made right reversed for now, but that is temporary until testing
         launchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         launchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         telemetry.addData("Status", "Initialized");
@@ -107,14 +107,14 @@ public class ShockwaveDrive extends OpMode
             //elevatorMotor.setTargetPosition(POSITION);
             telemetry.addData("Status", "Running: ", "Elevator Stow");
         } */
-          //////////OLD CODE//////////
-        if(gamepad1.dpad_up) {
+        //////////OLD CODE//////////
+        if (gamepad1.dpad_up) {
             elevatorMotor.setPower(0.25);
             telemetry.addData("Status", "Running: ", "Elevator Up");
-        }else if(gamepad1.dpad_down){
+        } else if (gamepad1.dpad_down) {
             elevatorMotor.setPower(-0.25);
             telemetry.addData("Status", "Running: ", "Elevator Down");
-        }else{
+        } else {
             telemetry.addData("Status", "Running: ", "Elevator Stopped");
             elevatorMotor.setPower(0);
         }
@@ -122,48 +122,51 @@ public class ShockwaveDrive extends OpMode
         /* end elevator motor setting */
 
         /* less than 80% half-speed mapping*/
-        if(gamepad1.left_stick_y < 0.8){
-            leftPower = gamepad1.left_stick_y/2;
-        }else{
+        if (gamepad1.left_stick_y < 0.8) {
+            leftPower = gamepad1.left_stick_y / 2;
+        } else {
             leftPower = gamepad1.left_stick_y;
         }
-        if(gamepad1.right_stick_y < 0.8){
-            rightPower = gamepad1.right_stick_y/2;
-        }else{
+        if (gamepad1.right_stick_y < 0.8) {
+            rightPower = gamepad1.right_stick_y / 2;
+        } else {
             rightPower = gamepad1.right_stick_y;
         }
         /* end less than 80% half-speed mapping */
 
         /* launch motor setting*/
-        if(gamepad2.right_trigger > 0.10) {
-            launchVar += 100;
+        if (gamepad2.right_bumper) {
             launchMotor.setPower(1);
-            launchMotor.setTargetPosition(launchVar);
-            sleep(300);
+        } else {
+            launchMotor.setPower(0);
         }
         telemetry.addData("launchMotor", launchMotor.getTargetPosition());
         /* end launch motor setting */
         /* lift motor setting */
-        if(gamepad2.dpad_up) {
+        if (gamepad2.dpad_up) {
             liftMotor.setPower(0.5);
             telemetry.addData("Status", "Running: ", "Lift Up");
-        }else if(gamepad2.dpad_down){ //TODO: Make autonomous positions using encoders
+        } else if (gamepad2.dpad_down) { //TODO: Make autonomous positions using encoders
             liftMotor.setPower(-0.25);
             telemetry.addData("Status", "Running: ", "Lift Down");
-        }else{
+        } else {
             liftMotor.setPower(0);
             telemetry.addData("Status", "Running: ", "Lift Stopped");
         }
         /* end lift motor setting */
 
-        /* flicker motor setting */ //TODO get this to work
-        /*if(gamepad2.left_bumper) {
+        /* flicker motor setting */
+        if (gamepad2.left_bumper) {
+            flicker = !flicker;
+            sleep(300);
+        }
+        if (flicker) {
             leftFlicker.setPower(1);
             rightFlicker.setPower(1);
-        } else if(gamepad2.left_trigger) {
+        } else {
             leftFlicker.setPower(0);
             rightFlicker.setPower(0);
-        }*/
+        }
         /* end flicker motor setting */
     }
 
