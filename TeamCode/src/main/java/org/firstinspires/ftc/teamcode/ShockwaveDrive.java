@@ -52,8 +52,8 @@ public class ShockwaveDrive extends OpMode {
     private DcMotor liftMotor = null;
     private DcMotor leftFlicker = null;
     private DcMotor rightFlicker = null;
-    public Servo forkliftServo = null;
-
+    private Servo forkliftServo = null;
+    //Private variables
     private float leftPower = 0;
     private float rightPower = 0;
     boolean flicker = false;
@@ -73,10 +73,9 @@ public class ShockwaveDrive extends OpMode {
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
         elevatorMotor.setDirection(DcMotor.Direction.FORWARD);
         launchMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightFlicker.setDirection(DcMotor.Direction.REVERSE); //TODO Test to see which flicker needs to be reversed, left or right.  I made right reversed for now, but that is temporary until testing
-        launchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        launchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFlicker.setDirection(DcMotor.Direction.REVERSE);
         telemetry.addData("Status", "Initialized");
+        telemetry.update();
     }
 
     @Override
@@ -168,6 +167,7 @@ public class ShockwaveDrive extends OpMode {
             rightFlicker.setPower(0);
         }
         /* end flicker motor setting */
+        telemetry.update();
     }
 
     @Override

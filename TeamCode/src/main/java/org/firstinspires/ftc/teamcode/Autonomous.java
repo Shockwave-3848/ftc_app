@@ -30,11 +30,11 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -50,44 +50,53 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Template: Linear OpMode", group="Linear Opmode")  // @Autonomous(...) is the other common choice
-@Disabled
-public class TemplateOpMode_Linear extends LinearOpMode {
-
-    /* Declare OpMode members. */
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Shockwave: Autonomous", group="Shockwave")  // @Autonomous(...) is the other common choice
+public class Autonomous extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
-    // DcMotor leftMotor = null;
-    // DcMotor rightMotor = null;
 
+    private DcMotor leftMotor = null;
+    private DcMotor rightMotor = null;
+    private DcMotor elevatorMotor = null;
+    private DcMotor launchMotor = null;
+    private DcMotor liftMotor = null;
+    private DcMotor leftFlicker = null;
+    private DcMotor rightFlicker = null;
+    private Servo forkliftServo = null;
     @Override
     public void runOpMode() throws InterruptedException {
+        leftMotor = hardwareMap.dcMotor.get("leftMotor");
+        rightMotor = hardwareMap.dcMotor.get("rightMotor");
+        elevatorMotor = hardwareMap.dcMotor.get("elevatorMotor");
+        launchMotor = hardwareMap.dcMotor.get("launchMotor");
+        liftMotor = hardwareMap.dcMotor.get("liftMotor");
+        forkliftServo = hardwareMap.servo.get("forkliftServo");
+        leftFlicker = hardwareMap.dcMotor.get("leftFlicker");
+        rightFlicker = hardwareMap.dcMotor.get("rightFlicker");
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightMotor.setDirection(DcMotor.Direction.FORWARD);
+        elevatorMotor.setDirection(DcMotor.Direction.FORWARD);
+        launchMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightFlicker.setDirection(DcMotor.Direction.REVERSE);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
-        /* eg: Initialize the hardware variables. Note that the strings used here as parameters
-         * to 'get' must correspond to the names assigned during the robot configuration
-         * step (using the FTC Robot Controller app on the phone).
-         */
-        // leftMotor  = hardwareMap.dcMotor.get("left_drive");
-        // rightMotor = hardwareMap.dcMotor.get("right_drive");
-
-        // eg: Set the drive motor directions:
-        // "Reverse" the motor that runs backwards when connected directly to the battery
-        // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        // rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-
-        // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
+        leftMotor.setPower(0.5);
+        rightMotor.setPower(0.5);
+        sleep(2000);
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+        elevatorMotor.setPower(-0.25);
+        sleep(1500);
+        elevatorMotor.setPower(0);
+        launchMotor.setPower(1);
+        sleep(2000);
+        launchMotor.setPower(0);
 
-        // run until the end of the match (driver presses STOP)
+
         while (opModeIsActive()) {
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Status", "Running: " + runtime.toString());
             telemetry.update();
-
-            // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-            // leftMotor.setPower(-gamepad1.left_stick_y);
-            // rightMotor.setPower(-gamepad1.right_stick_y);
         }
     }
 }
