@@ -45,14 +45,14 @@ import static android.os.SystemClock.sleep;
 public class ShockwaveDrive extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
-    private DcMotor leftMotor = null;
-    private DcMotor rightMotor = null;
-    private DcMotor elevatorMotor = null;
-    private DcMotor launchMotor = null;
-    private DcMotor liftMotor = null;
-    private DcMotor leftFlicker = null;
-    private DcMotor rightFlicker = null;
-    private Servo forkliftServo = null;
+    private DcMotor leftMotor;
+    private DcMotor rightMotor;
+    private DcMotor elevatorMotor;
+    private DcMotor launchMotor;
+    private DcMotor liftMotor;
+    private DcMotor leftFlicker;
+    private DcMotor rightFlicker;
+    private Servo forkliftServo;
     //Private variables
     private float leftPower = 0;
     private float rightPower = 0;

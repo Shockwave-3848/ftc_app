@@ -50,19 +50,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Shockwave: Autonomous 2016 VelVort", group="Shockwave")  // @Autonomous(...) is the other common choice
-public class Autonomous extends LinearOpMode {
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Shockwave: EncoderTesting", group="Shockwave")  // @Autonomous(...) is the other common choice
+public class Test extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
-    private DcMotor leftMotor;
-    private DcMotor rightMotor;
-    private DcMotor elevatorMotor;
-    private DcMotor launchMotor;
-    private DcMotor liftMotor;
-    private DcMotor leftFlicker;
-    private DcMotor rightFlicker;
-    private Servo forkliftServo;
-
+    private DcMotor leftMotor = null;
+    private DcMotor rightMotor = null;
+    private DcMotor elevatorMotor = null;
+    private DcMotor launchMotor = null;
+    private DcMotor liftMotor = null;
+    private DcMotor leftFlicker = null;
+    private DcMotor rightFlicker = null;
+    private Servo forkliftServo = null;
     @Override
     public void runOpMode() throws InterruptedException {
         leftMotor = hardwareMap.dcMotor.get("leftMotor");
@@ -78,27 +77,25 @@ public class Autonomous extends LinearOpMode {
         elevatorMotor.setDirection(DcMotor.Direction.REVERSE);
         launchMotor.setDirection(DcMotor.Direction.REVERSE);
         rightFlicker.setDirection(DcMotor.Direction.REVERSE);
+        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();
         runtime.reset();
+        leftMotor.setTargetPosition(driveInches(19));
+        rightMotor.setTargetPosition(driveInches(19));
         leftMotor.setPower(0.5);
         rightMotor.setPower(0.5);
-        sleep(500);
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
-        elevatorMotor.setPower(-0.25);
-        sleep(1000);
-        elevatorMotor.setPower(0);
-        launchMotor.setPower(1);
-        sleep(1000);
-        launchMotor.setPower(0);
-
-
         while (opModeIsActive()) {
             telemetry.addData("Status", "Running: " + runtime.toString());
+            telemetry.addData("Target", leftMotor.getTargetPosition());
+            telemetry.addData("Actual", leftMotor.getCurrentPosition());
             telemetry.update();
         }
+
     }
     int driveInches(int inches){
         return (int)(inches/(4*Math.PI))*1440;
