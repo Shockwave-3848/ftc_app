@@ -37,6 +37,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import java.util.ArrayList;
+
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
  * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
@@ -73,20 +75,22 @@ public class Autonomous extends LinearOpMode {
         forkliftServo = hardwareMap.servo.get("forkliftServo");
         leftFlicker = hardwareMap.dcMotor.get("leftFlicker");
         rightFlicker = hardwareMap.dcMotor.get("rightFlicker");
+        ArrayList<DcMotor> driveWheels = new ArrayList<DcMotor>();
         leftMotor.setDirection(DcMotor.Direction.FORWARD);
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
         elevatorMotor.setDirection(DcMotor.Direction.REVERSE);
         launchMotor.setDirection(DcMotor.Direction.REVERSE);
         rightFlicker.setDirection(DcMotor.Direction.REVERSE);
+        leftMotor.setPower(0.5);
+        rightMotor.setPower(0.5);
+        driveWheels.add(leftMotor);
+        driveWheels.add(rightMotor);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();
         runtime.reset();
-        leftMotor.setPower(0.5);
-        rightMotor.setPower(0.5);
+        driveInches(20, driveWheels);
         sleep(500);
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
         elevatorMotor.setPower(-0.25);
         sleep(1000);
         elevatorMotor.setPower(0);
@@ -94,13 +98,17 @@ public class Autonomous extends LinearOpMode {
         sleep(1000);
         launchMotor.setPower(0);
 
-
         while (opModeIsActive()) {
             telemetry.addData("Status", "Running: " + runtime.toString());
             telemetry.update();
         }
     }
-    int driveInches(int inches){
-        return (int)(inches/(4*Math.PI))*1440;
+    void driveInches(int inches, DcMotor motor){
+        motor.setTargetPosition((int)(inches/(4*Math.PI))*1440);
+    }
+    void driveInches(int inches, ArrayList<DcMotor> motors){
+        for (DcMotor motor:motors){
+            motor.setTargetPosition((int)(inches/(4*Math.PI))*1440);
+        }
     }
 }
