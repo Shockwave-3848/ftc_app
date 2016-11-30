@@ -141,6 +141,7 @@ public class ShockwaveDrive extends OpMode {
         }
         telemetry.addData("launchMotor", launchMotor.getTargetPosition());
         /* end launch motor setting */
+
         /* lift motor setting */
         if (gamepad2.dpad_up) {
             liftMotor.setPower(0.5);
