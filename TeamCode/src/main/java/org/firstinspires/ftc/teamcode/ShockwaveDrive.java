@@ -161,8 +161,8 @@ public class ShockwaveDrive extends OpMode {
             sleep(300);
         }
         if (flicker) {
-            leftFlicker.setPower(0.25);
-            rightFlicker.setPower(0.25);
+            leftFlicker.setPower(0.1);
+            rightFlicker.setPower(0.1);
         } else {
             leftFlicker.setPower(0);
             rightFlicker.setPower(0);
