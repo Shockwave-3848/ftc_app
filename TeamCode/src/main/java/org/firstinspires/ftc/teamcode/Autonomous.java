@@ -63,7 +63,8 @@ public class Autonomous extends LinearOpMode {
     private DcMotor liftMotor;
     private DcMotor leftFlicker;
     private DcMotor rightFlicker;
-    private Servo forkliftServo;
+    private Servo forkliftServoL;
+    private Servo forkliftServoR;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -72,7 +73,8 @@ public class Autonomous extends LinearOpMode {
         elevatorMotor = hardwareMap.dcMotor.get("elevatorMotor");
         launchMotor = hardwareMap.dcMotor.get("launchMotor");
         liftMotor = hardwareMap.dcMotor.get("liftMotor");
-        forkliftServo = hardwareMap.servo.get("forkliftServo");
+        forkliftServoL = hardwareMap.servo.get("forkliftServoL");
+        forkliftServoR = hardwareMap.servo.get("forkliftServoR");
         leftFlicker = hardwareMap.dcMotor.get("leftFlicker");
         rightFlicker = hardwareMap.dcMotor.get("rightFlicker");
         ArrayList<DcMotor> driveWheels = new ArrayList<DcMotor>();
@@ -81,6 +83,12 @@ public class Autonomous extends LinearOpMode {
         elevatorMotor.setDirection(DcMotor.Direction.REVERSE);
         launchMotor.setDirection(DcMotor.Direction.REVERSE);
         rightFlicker.setDirection(DcMotor.Direction.REVERSE);
+        forkliftServoL.setDirection(Servo.Direction.REVERSE);
+        forkliftServoR.setDirection(Servo.Direction.FORWARD);
+        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        forkliftServoL.setPosition(80);
+        forkliftServoR.setPosition(80);
         leftMotor.setPower(0.5);
         rightMotor.setPower(0.5);
         driveWheels.add(leftMotor);
@@ -108,7 +116,7 @@ public class Autonomous extends LinearOpMode {
     }
     void driveInches(int inches, ArrayList<DcMotor> motors){
         for (DcMotor motor:motors){
-            motor.setTargetPosition((int)(inches/(4*Math.PI))*1440);
+            motor.setTargetPosition((int)(inches/(4*Math.PI))*1120);
         }
     }
 }

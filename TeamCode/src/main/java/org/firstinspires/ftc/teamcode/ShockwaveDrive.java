@@ -52,7 +52,8 @@ public class ShockwaveDrive extends OpMode {
     private DcMotor liftMotor;
     private DcMotor leftFlicker;
     private DcMotor rightFlicker;
-    private Servo forkliftServo;
+    private Servo forkliftServoL;
+    private Servo forkliftServoR;
     //Private variables
     private float leftPower = 0;
     private float rightPower = 0;
@@ -66,14 +67,19 @@ public class ShockwaveDrive extends OpMode {
         elevatorMotor = hardwareMap.dcMotor.get("elevatorMotor");
         launchMotor = hardwareMap.dcMotor.get("launchMotor");
         liftMotor = hardwareMap.dcMotor.get("liftMotor");
-        forkliftServo = hardwareMap.servo.get("forkliftServo");
+        forkliftServoL = hardwareMap.servo.get("forkliftServoL");
+        forkliftServoR = hardwareMap.servo.get("forkliftServoR");
         leftFlicker = hardwareMap.dcMotor.get("leftFlicker");
         rightFlicker = hardwareMap.dcMotor.get("rightFlicker");
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
-        elevatorMotor.setDirection(DcMotor.Direction.FORWARD);
+        elevatorMotor.setDirection(DcMotor.Direction.REVERSE);
         launchMotor.setDirection(DcMotor.Direction.REVERSE);
         rightFlicker.setDirection(DcMotor.Direction.REVERSE);
+        forkliftServoL.setDirection(Servo.Direction.REVERSE);
+        forkliftServoR.setDirection(Servo.Direction.FORWARD);
+        forkliftServoL.setPosition(80);
+        forkliftServoR.setPosition(80);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
     }
@@ -161,11 +167,15 @@ public class ShockwaveDrive extends OpMode {
             sleep(300);
         }
         if (flicker) {
-            leftFlicker.setPower(0.1);
-            rightFlicker.setPower(0.1);
+            leftFlicker.setPower(0.2);
+            rightFlicker.setPower(0.2);
         } else {
             leftFlicker.setPower(0);
             rightFlicker.setPower(0);
+        }
+        if(gamepad1.dpad_right){
+            forkliftServoL.setPosition(0);
+            forkliftServoR.setPosition(0);
         }
         /* end flicker motor setting */
         telemetry.update();
