@@ -105,6 +105,9 @@ public class Autonomous extends LinearOpMode {
         launchMotor.setPower(1);
         sleep(1000);
         launchMotor.setPower(0);
+        driveInches(20, driveWheels);
+        sleep(500);
+        setCollectivePower(0,driveWheels);
 
         while (opModeIsActive()) {
             telemetry.addData("Status", "Running: " + runtime.toString());
@@ -117,6 +120,11 @@ public class Autonomous extends LinearOpMode {
     void driveInches(int inches, ArrayList<DcMotor> motors){
         for (DcMotor motor:motors){
             motor.setTargetPosition((int)(inches/(4*Math.PI))*1120);
+        }
+    }
+    void setCollectivePower(float power, ArrayList<DcMotor> motors){
+        for (DcMotor motor:motors){
+            motor.setPower(power);
         }
     }
 }
