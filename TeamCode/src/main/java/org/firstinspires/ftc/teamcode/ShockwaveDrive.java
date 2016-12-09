@@ -128,19 +128,28 @@ public class ShockwaveDrive extends OpMode {
 
         /* less than 80% half-speed mapping*/
         if (gamepad1.left_stick_y < 0.8) {
-            leftPower = gamepad1.left_stick_y / 2;
+            leftPower = gamepad1.left_stick_y / 4;
         } else {
             leftPower = gamepad1.left_stick_y;
         }
         if (gamepad1.right_stick_y < 0.8) {
-            rightPower = gamepad1.right_stick_y / 2;
+            rightPower = gamepad1.right_stick_y / 4;
         } else {
             rightPower = gamepad1.right_stick_y;
         }
         /* end less than 80% half-speed mapping */
 
+        /* slow speed mapping */
+        if (gamepad1.left_trigger > 0.1){
+            leftMotor.setPower(gamepad1.left_trigger/4);
+        }
+        if(gamepad2.right_trigger > 0.1){
+            rightMotor.setPower(gamepad1.right_trigger/4);
+        }
+        /* end slow speed mapping */
+
         /* launch motor setting*/
-        if (gamepad2.right_bumper) {
+        if (gamepad2.right_trigger > 0.1) {
             launchMotor.setPower(1);
         } else {
             launchMotor.setPower(0);
@@ -173,11 +182,14 @@ public class ShockwaveDrive extends OpMode {
             leftFlicker.setPower(0);
             rightFlicker.setPower(0);
         }
-        if(gamepad1.dpad_right){
+        /* end flicker motor setting */
+
+        /* forklift release */
+        if(gamepad1.left_bumper){
             forkliftServoL.setPosition(0);
             forkliftServoR.setPosition(0);
         }
-        /* end flicker motor setting */
+        /* end forklift release */
         telemetry.update();
     }
 
