@@ -113,10 +113,10 @@ public class ShockwaveDrive extends OpMode {
             telemetry.addData("Status", "Running: ", "Elevator Stow");
         } */
         //////////OLD CODE//////////
-        if (gamepad1.dpad_up) {
+        if (gamepad2.y) {
             elevatorMotor.setPower(0.25);
             telemetry.addData("Status", "Running: ", "Elevator Up");
-        } else if (gamepad1.dpad_down) {
+        } else if (gamepad2.a) {
             elevatorMotor.setPower(-0.25);
             telemetry.addData("Status", "Running: ", "Elevator Down");
         } else {
@@ -128,23 +128,33 @@ public class ShockwaveDrive extends OpMode {
 
         /* less than 80% half-speed mapping*/
         if (gamepad1.left_stick_y < 0.8) {
-            leftPower = gamepad1.left_stick_y / 4;
+            leftPower = gamepad1.left_stick_y / 2;
         } else {
             leftPower = gamepad1.left_stick_y;
         }
         if (gamepad1.right_stick_y < 0.8) {
-            rightPower = gamepad1.right_stick_y / 4;
+            rightPower = gamepad1.right_stick_y / 2;
         } else {
             rightPower = gamepad1.right_stick_y;
         }
         /* end less than 80% half-speed mapping */
 
         /* slow speed mapping */
-        if (gamepad1.left_trigger > 0.1){
-            leftMotor.setPower(gamepad1.left_trigger/4);
+        if (gamepad1.a){
+            leftMotor.setPower(-0.5);
+            rightMotor.setPower(-0.5);
         }
-        if(gamepad2.right_trigger > 0.1){
-            rightMotor.setPower(gamepad1.right_trigger/4);
+        if(gamepad1.x){
+            leftMotor.setPower(-0.5);
+            rightMotor.setPower(0.5);
+        }
+        if(gamepad1.b){
+            leftMotor.setPower(0.5);
+            rightMotor.setPower(-0.5);
+        }
+        if(gamepad1.y){
+            leftMotor.setPower(0.5);
+            rightMotor.setPower(0.5);
         }
         /* end slow speed mapping */
 
@@ -154,7 +164,6 @@ public class ShockwaveDrive extends OpMode {
         } else {
             launchMotor.setPower(0);
         }
-        telemetry.addData("launchMotor", launchMotor.getTargetPosition());
         /* end launch motor setting */
 
         /* lift motor setting */
