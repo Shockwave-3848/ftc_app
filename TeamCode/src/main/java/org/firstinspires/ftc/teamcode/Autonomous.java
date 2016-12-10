@@ -120,6 +120,7 @@ public class Autonomous extends LinearOpMode {
             driveInches(36, leftMotor);
             sleep(1500);
         }
+        driveInches(46, driveWheels);
         setCollectivePower(0, driveWheels);
 
         while (opModeIsActive()) {
