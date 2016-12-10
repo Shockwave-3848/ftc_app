@@ -44,15 +44,16 @@ import java.util.ArrayList;
  * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
  * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- *
+ * <p>
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all linear OpModes contain.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Shockwave: Autonomous 2016 VelVort", group="Shockwave")  // @Autonomous(...) is the other common choice
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Shockwave: Autonomous 2016 VelVort", group = "Shockwave")
+// @Autonomous(...) is the other common choice
 public class Autonomous extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -100,32 +101,49 @@ public class Autonomous extends LinearOpMode {
         leftMotor.setPower(0.5);
         rightMotor.setPower(0.5);
         driveInches(30, driveWheels);
-        sleep(500);
+        sleep(2000);
+        driveInches(30, leftMotor, 1120/4);
         elevatorMotor.setPower(-0.25);
         sleep(1000);
         elevatorMotor.setPower(0);
-        launchMotor.setPower(1);
         sleep(1000);
+        launchMotor.setPower(1);
+        sleep(1300);
         launchMotor.setPower(0);
-        driveInches(20, driveWheels);
-        sleep(500);
-        setCollectivePower(0,driveWheels);
+        elevatorMotor.setPower(0.25);
+        sleep(1000);
+        elevatorMotor.setPower(0);
+        driveInches(40, driveWheels);
+        for (int i = 0; i < 2; i++) {
+            driveInches(46, leftMotor);
+            sleep(1500);
+            driveInches(36, leftMotor);
+            sleep(1500);
+        }
+        setCollectivePower(0, driveWheels);
 
         while (opModeIsActive()) {
             telemetry.addData("Status", "Running: " + runtime.toString());
             telemetry.update();
         }
     }
-    void driveInches(int inches, DcMotor motor){
-        motor.setTargetPosition((int)(inches/(4*Math.PI))*1440);
+
+    void driveInches(int inches, DcMotor motor) {
+        motor.setTargetPosition((int) (inches / (4 * Math.PI)) * 1440);
     }
-    void driveInches(int inches, ArrayList<DcMotor> motors){
-        for (DcMotor motor:motors){
-            motor.setTargetPosition((int)(inches/(4*Math.PI))*1120);
+
+    void driveInches(int inches, ArrayList<DcMotor> motors) {
+        for (DcMotor motor : motors) {
+            motor.setTargetPosition((int) (inches / (4 * Math.PI)) * 1120);
         }
     }
-    void setCollectivePower(float power, ArrayList<DcMotor> motors){
-        for (DcMotor motor:motors){
+
+    void driveInches(int inches, DcMotor motor, int add) {
+        motor.setTargetPosition(add + (int) (inches / (4 * Math.PI)) * 1120);
+    }
+
+    void setCollectivePower(float power, ArrayList<DcMotor> motors) {
+        for (DcMotor motor : motors) {
             motor.setPower(power);
         }
     }

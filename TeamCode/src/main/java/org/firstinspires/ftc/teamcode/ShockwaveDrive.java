@@ -54,9 +54,11 @@ public class ShockwaveDrive extends OpMode {
     private DcMotor rightFlicker;
     private Servo forkliftServoL;
     private Servo forkliftServoR;
+    private Servo armServoL;
     //Private variables
     private float leftPower = 0;
     private float rightPower = 0;
+    boolean armOut = false;
     boolean flicker = false;
     int launchVar = 0;
 
@@ -71,6 +73,7 @@ public class ShockwaveDrive extends OpMode {
         forkliftServoR = hardwareMap.servo.get("forkliftServoR");
         leftFlicker = hardwareMap.dcMotor.get("leftFlicker");
         rightFlicker = hardwareMap.dcMotor.get("rightFlicker");
+        armServoL = hardwareMap.servo.get("armServoL");
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
         elevatorMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -78,8 +81,10 @@ public class ShockwaveDrive extends OpMode {
         rightFlicker.setDirection(DcMotor.Direction.REVERSE);
         forkliftServoL.setDirection(Servo.Direction.REVERSE);
         forkliftServoR.setDirection(Servo.Direction.FORWARD);
+        armServoL.setDirection(Servo.Direction.FORWARD);
         forkliftServoL.setPosition(80);
         forkliftServoR.setPosition(80);
+        armServoL.setPosition(-10);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
     }
@@ -96,6 +101,7 @@ public class ShockwaveDrive extends OpMode {
     @Override
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
+        telemetry.addData("Elevator", "Position: ", + elevatorMotor.getCurrentPosition());
         /* drive motor setting */
         leftMotor.setPower(leftPower);
         rightMotor.setPower(rightPower);
@@ -199,6 +205,24 @@ public class ShockwaveDrive extends OpMode {
             forkliftServoR.setPosition(0);
         }
         /* end forklift release */
+
+        /* arm controls */
+        /*
+        if(gamepad2.b){
+            if(armOut){
+                armServoL.setPosition(100);
+                armOut = true;
+            } else {
+                armServoL.setPosition(-10);
+            }
+        }
+        */
+        if(gamepad2.x){
+            armServoL.setPosition(100);
+        } else if(gamepad2.b){
+            armServoL.setPosition(-10);
+        }
+        /* end arm controls */
         telemetry.update();
     }
 
