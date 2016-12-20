@@ -45,8 +45,10 @@ import static android.os.SystemClock.sleep;
 public class ShockwaveDrive extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
-    private DcMotor leftMotor;
-    private DcMotor rightMotor;
+    private DcMotor backLeftMotor;
+    private DcMotor backRightMotor;
+    private DcMotor frontLeftMotor;
+    private DcMotor frontRightMotor;
     private DcMotor elevatorMotor;
     private DcMotor launchMotor;
     private DcMotor liftMotor;
@@ -60,12 +62,15 @@ public class ShockwaveDrive extends OpMode {
     private float rightPower = 0;
     boolean armOut = false;
     boolean flicker = false;
+    private double mecanumDriveSpeed = 0.7;
     int launchVar = 0;
 
     @Override
     public void init() {
-        leftMotor = hardwareMap.dcMotor.get("leftMotor");
-        rightMotor = hardwareMap.dcMotor.get("rightMotor");
+        backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
+        backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
+        frontLeftMotor = hardwareMap.dcMotor.get("frontLeftMotor");
+        frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         elevatorMotor = hardwareMap.dcMotor.get("elevatorMotor");
         launchMotor = hardwareMap.dcMotor.get("launchMotor");
         liftMotor = hardwareMap.dcMotor.get("liftMotor");
@@ -74,8 +79,8 @@ public class ShockwaveDrive extends OpMode {
         leftFlicker = hardwareMap.dcMotor.get("leftFlicker");
         rightFlicker = hardwareMap.dcMotor.get("rightFlicker");
         armServoL = hardwareMap.servo.get("armServoL");
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightMotor.setDirection(DcMotor.Direction.FORWARD);
+        backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        backRightMotor.setDirection(DcMotor.Direction.FORWARD);
         elevatorMotor.setDirection(DcMotor.Direction.REVERSE);
         launchMotor.setDirection(DcMotor.Direction.REVERSE);
         rightFlicker.setDirection(DcMotor.Direction.REVERSE);
@@ -103,8 +108,12 @@ public class ShockwaveDrive extends OpMode {
         telemetry.addData("Status", "Running: " + runtime.toString());
         telemetry.addData("Elevator", "Position: ", + elevatorMotor.getCurrentPosition());
         /* drive motor setting */
-        leftMotor.setPower(leftPower);
-        rightMotor.setPower(rightPower);
+        if(!gamepad1.dpad_right && !gamepad1.dpad_down && !gamepad1.dpad_down && !gamepad1.dpad_right) {
+            backLeftMotor.setPower(leftPower);
+            backRightMotor.setPower(rightPower);
+            frontLeftMotor.setPower(leftPower);
+            frontRightMotor.setPower(rightPower);
+        }
         /* end drive motor setting */
 
         /* elevator motor setting */ /*
@@ -147,20 +156,20 @@ public class ShockwaveDrive extends OpMode {
 
         /* slow speed mapping */
         if (gamepad1.a){
-            leftMotor.setPower(-0.5);
-            rightMotor.setPower(-0.5);
+            backLeftMotor.setPower(-0.5);
+            backRightMotor.setPower(-0.5);
         }
         if(gamepad1.x){
-            leftMotor.setPower(-0.5);
-            rightMotor.setPower(0.5);
+            backLeftMotor.setPower(-0.5);
+            backRightMotor.setPower(0.5);
         }
         if(gamepad1.b){
-            leftMotor.setPower(0.5);
-            rightMotor.setPower(-0.5);
+            backLeftMotor.setPower(0.5);
+            backRightMotor.setPower(-0.5);
         }
         if(gamepad1.y){
-            leftMotor.setPower(0.5);
-            rightMotor.setPower(0.5);
+            backLeftMotor.setPower(0.5);
+            backRightMotor.setPower(0.5);
         }
         /* end slow speed mapping */
 
@@ -223,12 +232,39 @@ public class ShockwaveDrive extends OpMode {
             armServoL.setPosition(-10);
         }
         /* end arm controls */
+
+        /* mecanum drive */
+        if(gamepad1.dpad_up){
+            frontLeftMotor.setPower(mecanumDriveSpeed);
+            frontRightMotor.setPower(mecanumDriveSpeed);
+            backLeftMotor.setPower(mecanumDriveSpeed);
+            backRightMotor.setPower(mecanumDriveSpeed);
+        }
+        if(gamepad1.dpad_right){
+            frontLeftMotor.setPower(mecanumDriveSpeed);
+            frontRightMotor.setPower(-mecanumDriveSpeed);
+            backLeftMotor.setPower(-mecanumDriveSpeed);
+            backRightMotor.setPower(mecanumDriveSpeed);
+        }
+        if(gamepad1.dpad_left){
+            frontLeftMotor.setPower(-mecanumDriveSpeed);
+            frontRightMotor.setPower(mecanumDriveSpeed);
+            backLeftMotor.setPower(mecanumDriveSpeed);
+            backRightMotor.setPower(-mecanumDriveSpeed);
+        }
+        if(gamepad1.dpad_down){
+            frontLeftMotor.setPower(-mecanumDriveSpeed);
+            frontRightMotor.setPower(-mecanumDriveSpeed);
+            backLeftMotor.setPower(-mecanumDriveSpeed);
+            backRightMotor.setPower(-mecanumDriveSpeed);
+        }
+        /* end mecanum drive */
         telemetry.update();
     }
 
     @Override
     public void stop() {
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
     }
 }
