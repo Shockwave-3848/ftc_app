@@ -63,7 +63,7 @@ public class ShockwaveDrive extends OpMode {
     private float backRightPower = 0;
     boolean armOut = false;
     //boolean flicker = false;
-    private float mecanumDriveSpeed = (float) 0.7;
+    private float mecanumDriveSpeed = (float) 0.5;
     int launchVar = 0;
 
     @Override
@@ -152,8 +152,8 @@ public class ShockwaveDrive extends OpMode {
         }
         /* end less than 80% half-speed mapping */
 
-        /* slow speed mapping */ //TODO: Put Back, changed for mechinum
-        /*
+        /* slow speed mapping */
+
         if (gamepad1.a){
             backLeftMotor.setPower(-0.5);
             backRightMotor.setPower(-0.5);
@@ -170,7 +170,7 @@ public class ShockwaveDrive extends OpMode {
             backLeftMotor.setPower(0.5);
             backRightMotor.setPower(0.5);
         }
-        */
+
         /* end slow speed mapping */
 
         /* launch motor setting*/
