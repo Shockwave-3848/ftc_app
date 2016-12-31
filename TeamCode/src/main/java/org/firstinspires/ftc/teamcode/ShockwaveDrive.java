@@ -38,6 +38,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import static android.os.SystemClock.sleep;
+
 @TeleOp(name = "Shockwave: TeleOp 2016 VelVort", group = "Shockwave")
 //@Disabled
 public class ShockwaveDrive extends OpMode {
@@ -59,7 +61,7 @@ public class ShockwaveDrive extends OpMode {
     private float backRightPower = 0;
     //boolean flicker = false;
     private float mecanumDriveSpeed = (float) 0.5;
-    int launchVar = 0;
+    int launchPos = 0;
 
     @Override
     public void init() {
@@ -70,6 +72,9 @@ public class ShockwaveDrive extends OpMode {
         frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         flickerMotor = hardwareMap.dcMotor.get("flickerMotor");
         launchMotor = hardwareMap.dcMotor.get("launchMotor");
+        launchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        launchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        launchMotor.setPower(0.75);
         liftMotor = hardwareMap.dcMotor.get("liftMotor");
         forkliftServoL = hardwareMap.servo.get("forkliftServoL");
         forkliftServoR = hardwareMap.servo.get("forkliftServoR");
@@ -77,8 +82,8 @@ public class ShockwaveDrive extends OpMode {
         backRightMotor.setDirection(DcMotor.Direction.FORWARD);
         flickerMotor.setDirection(DcMotor.Direction.REVERSE);
         launchMotor.setDirection(DcMotor.Direction.REVERSE);
-        forkliftServoL.setDirection(Servo.Direction.REVERSE);
-        forkliftServoR.setDirection(Servo.Direction.FORWARD);
+        forkliftServoL.setDirection(Servo.Direction.FORWARD);
+        forkliftServoR.setDirection(Servo.Direction.REVERSE);
         forkliftServoL.setPosition(80);
         forkliftServoR.setPosition(80);
         telemetry.addData("Status", "Initialized");
@@ -101,10 +106,10 @@ public class ShockwaveDrive extends OpMode {
 
         /* elevator motor setting */
         if (gamepad2.y) {
-            flickerMotor.setPower(0.25);
+            flickerMotor.setPower(1);
             telemetry.addData("Status", "Running: ", "Flicker In");
         } else if (gamepad2.a) {
-            flickerMotor.setPower(-0.25);
+            flickerMotor.setPower(-1);
             telemetry.addData("Status", "Running: ", "Flicker Out");
         } else {
             telemetry.addData("Status", "Running: ", "Flicker Stopped");
@@ -112,48 +117,26 @@ public class ShockwaveDrive extends OpMode {
         }
         /* end elevator motor setting */
 
-        /* less than 80% half-speed mapping*/
-        if (gamepad1.left_stick_y < 0.8) {
-            frontLeftPower = gamepad1.left_stick_y / 2;
-            backLeftPower = gamepad1.left_stick_y /2;
-        } else {
-            frontLeftPower = gamepad1.left_stick_y;
-            backLeftPower = gamepad1.left_stick_y;
-        }
-        if (gamepad1.right_stick_y < 0.8) {
-            frontRightPower = gamepad1.right_stick_y / 2;
-            backRightPower = gamepad1.right_stick_y / 2;
-        } else {
-            frontRightPower = gamepad1.right_stick_y;
-            backRightPower = gamepad1.right_stick_y;
-        }
-        /* end less than 80% half-speed mapping */
+        /* drive mapping */
+        frontLeftPower = gamepad1.left_stick_y;
+        backLeftPower = gamepad1.left_stick_y;
+        frontRightPower = gamepad1.right_stick_y;
+        backRightPower = gamepad1.right_stick_y;
 
-        /* slow speed mapping */
-        if (gamepad1.a){
-            backLeftMotor.setPower(-0.5);
-            backRightMotor.setPower(-0.5);
+        if(gamepad1.right_trigger > 0.2){
+            frontLeftPower = gamepad1.left_stick_y/2;
+            backLeftPower = gamepad1.left_stick_y/2;
+            frontRightPower = gamepad1.right_stick_y/2;
+            backRightPower = gamepad1.right_stick_y/2;
         }
-        if(gamepad1.x){
-            backLeftMotor.setPower(-0.5);
-            backRightMotor.setPower(0.5);
-        }
-        if(gamepad1.b){
-            backLeftMotor.setPower(0.5);
-            backRightMotor.setPower(-0.5);
-        }
-        if(gamepad1.y){
-            backLeftMotor.setPower(0.5);
-            backRightMotor.setPower(0.5);
-        }
-        /* end slow speed mapping */
+        /* end drive mapping */
 
         /* launch motor setting*/
         if (gamepad2.right_trigger > 0.1) {
-            launchMotor.setPower(1);
-        } else {
-            launchMotor.setPower(0);
+            launchPos = launchPos + 3360;
+            sleep(300);
         }
+        launchMotor.setTargetPosition(launchPos);
         /* end launch motor setting */
 
         /* lift motor setting */
@@ -187,8 +170,8 @@ public class ShockwaveDrive extends OpMode {
 
         /* forklift release */
         if(gamepad1.left_bumper){
-            forkliftServoL.setPosition(0);
-            forkliftServoR.setPosition(0);
+            forkliftServoL.setPosition(255);
+            forkliftServoR.setPosition(255);
         }
 
         /* end forklift release */
@@ -220,14 +203,14 @@ public class ShockwaveDrive extends OpMode {
             backRightPower = -mecanumDriveSpeed;
         } legacy mecanum */
 
-        if(gamepad1.left_stick_x == 1 && gamepad1.right_stick_x == 1){ //go right
+        if(gamepad1.left_stick_x == -1 && gamepad1.right_stick_x == -1){ //go right
             frontLeftPower = mecanumDriveSpeed;
             frontRightPower = -mecanumDriveSpeed;
             backLeftPower = -mecanumDriveSpeed;
             backRightPower = mecanumDriveSpeed;
         }
 
-        if(gamepad1.left_stick_x == -1 && gamepad1.right_stick_x == -1){ //go left
+        if(gamepad1.left_stick_x == 1 && gamepad1.right_stick_x == 1){ //go left
             frontLeftPower = -mecanumDriveSpeed;
             frontRightPower = mecanumDriveSpeed;
             backLeftPower = mecanumDriveSpeed;

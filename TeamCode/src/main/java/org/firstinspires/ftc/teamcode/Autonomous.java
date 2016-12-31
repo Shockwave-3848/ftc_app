@@ -98,11 +98,56 @@ public class Autonomous extends LinearOpMode {
         telemetry.update();
         waitForStart();
         runtime.reset();
+        //drive forward
+
+        //launch ball
+
+        //load second ball
+
+        //launch second ball
+
+        //if no beacons, dislodge ball
+
+        //if beacons, drive towards wall depends on color
+
+        //if red
+
+            //go left
+
+            //go forward
+
+            //go left into beacon
+
+            //go right away from beacon
+
+            //go forward towards second beacon
+
+            //go left into beacon
+
+        //if blue
+
+            //go right
+
+            //go forward
+
+            //turn 180
+
+            //go left into beacon
+
+            //go right away from beacon
+
+            //go backwards towards second beacon
+
+            //go left into beacon
+
+        //end
+
+
         leftMotor.setPower(0.5);
         rightMotor.setPower(0.5);
         driveInches(30, driveWheels);
         sleep(2000);
-        driveInches(30, leftMotor, 1120/4);
+        driveInches(30, leftMotor, 1120 / 4);
         elevatorMotor.setPower(-0.25);
         sleep(1000);
         elevatorMotor.setPower(0);
