@@ -59,7 +59,7 @@ public class Autonomous extends LinearOpMode {
 
     private DcMotor leftMotor;
     private DcMotor rightMotor;
-    private DcMotor elevatorMotor;
+    private DcMotor flickerMotor;
     private DcMotor launchMotor;
     private DcMotor liftMotor;
     private DcMotor leftFlicker;
@@ -71,7 +71,7 @@ public class Autonomous extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         leftMotor = hardwareMap.dcMotor.get("leftMotor");
         rightMotor = hardwareMap.dcMotor.get("rightMotor");
-        elevatorMotor = hardwareMap.dcMotor.get("elevatorMotor");
+        flickerMotor = hardwareMap.dcMotor.get("flickerMotor");
         launchMotor = hardwareMap.dcMotor.get("launchMotor");
         liftMotor = hardwareMap.dcMotor.get("liftMotor");
         forkliftServoL = hardwareMap.servo.get("forkliftServoL");
@@ -81,8 +81,10 @@ public class Autonomous extends LinearOpMode {
         ArrayList<DcMotor> driveWheels = new ArrayList<DcMotor>();
         leftMotor.setDirection(DcMotor.Direction.FORWARD);
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
-        elevatorMotor.setDirection(DcMotor.Direction.REVERSE);
+        flickerMotor.setDirection(DcMotor.Direction.REVERSE);
         launchMotor.setDirection(DcMotor.Direction.REVERSE);
+        launchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        launchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFlicker.setDirection(DcMotor.Direction.REVERSE);
         forkliftServoL.setDirection(Servo.Direction.REVERSE);
         forkliftServoR.setDirection(Servo.Direction.FORWARD);
@@ -97,15 +99,21 @@ public class Autonomous extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();
-        runtime.reset();
+        runtime.reset();                                                         //START CODE!!!
+        leftMotor.setPower(0.5);
+        rightMotor.setPower(0.5);
+        launchMotor.setPower(0.75);
         //drive forward
-
+        driveInches(30, driveWheels);
+        sleep(3000);
         //launch ball
-
+        launch();
         //load second ball
-
+        flickerMotor.setPower(1);
+        sleep(3000);
+        flickerMotor.setPower(0);
         //launch second ball
-
+        launch();
         //if no beacons, dislodge ball
 
         //if beacons, drive towards wall depends on color
@@ -143,21 +151,22 @@ public class Autonomous extends LinearOpMode {
         //end
 
 
+        /*                                   //legacy mecanum code
         leftMotor.setPower(0.5);
         rightMotor.setPower(0.5);
         driveInches(30, driveWheels);
         sleep(2000);
         driveInches(30, leftMotor, 1120 / 4);
-        elevatorMotor.setPower(-0.25);
+        flickerMotor.setPower(-0.25);
         sleep(1000);
-        elevatorMotor.setPower(0);
+        flickerMotor.setPower(0);
         sleep(1000);
         launchMotor.setPower(1);
         sleep(1300);
         launchMotor.setPower(0);
-        elevatorMotor.setPower(0.25);
+        flickerMotor.setPower(0.25);
         sleep(1000);
-        elevatorMotor.setPower(0);
+        flickerMotor.setPower(0);
         driveInches(40, driveWheels);
         for (int i = 0; i < 2; i++) {
             driveInches(46, leftMotor);
@@ -172,25 +181,27 @@ public class Autonomous extends LinearOpMode {
             telemetry.addData("Status", "Running: " + runtime.toString());
             telemetry.update();
         }
+        */
     }
 
     void driveInches(int inches, DcMotor motor) {
-        motor.setTargetPosition((int) (inches / (4 * Math.PI)) * 1440);
+        motor.setTargetPosition((int) (motor.getTargetPosition() + (inches / (4 * Math.PI)) * 1120));
     }
 
     void driveInches(int inches, ArrayList<DcMotor> motors) {
         for (DcMotor motor : motors) {
-            motor.setTargetPosition((int) (inches / (4 * Math.PI)) * 1120);
+            motor.setTargetPosition((int) (motor.getTargetPosition() + (inches / (4 * Math.PI)) * 1120));
         }
-    }
-
-    void driveInches(int inches, DcMotor motor, int add) {
-        motor.setTargetPosition(add + (int) (inches / (4 * Math.PI)) * 1120);
     }
 
     void setCollectivePower(float power, ArrayList<DcMotor> motors) {
         for (DcMotor motor : motors) {
             motor.setPower(power);
         }
+    }
+
+    void launch() {
+        launchMotor.setTargetPosition(launchMotor.getTargetPosition() + 3360);
+        sleep(2500);
     }
 }
