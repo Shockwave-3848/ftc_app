@@ -124,10 +124,10 @@ public class ShockwaveDrive extends OpMode {
         backRightPower = gamepad1.right_stick_y;
 
         if(gamepad1.right_trigger > 0.2){
-            frontLeftPower = gamepad1.left_stick_y/2;
-            backLeftPower = gamepad1.left_stick_y/2;
-            frontRightPower = gamepad1.right_stick_y/2;
-            backRightPower = gamepad1.right_stick_y/2;
+            frontLeftPower = gamepad1.left_stick_y/4;
+            backLeftPower = gamepad1.left_stick_y/4;
+            frontRightPower = gamepad1.right_stick_y/4;
+            backRightPower = gamepad1.right_stick_y/4;
         }
         /* end drive mapping */
 

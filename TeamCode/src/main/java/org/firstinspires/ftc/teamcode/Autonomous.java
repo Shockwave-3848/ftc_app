@@ -57,63 +57,73 @@ import java.util.ArrayList;
 public class Autonomous extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
-    private DcMotor leftMotor;
-    private DcMotor rightMotor;
+    private DcMotor frontLeftMotor;
+    private DcMotor frontRightMotor;
+    private DcMotor backLeftMotor;
+    private DcMotor backRightMotor;
     private DcMotor flickerMotor;
     private DcMotor launchMotor;
-    private DcMotor liftMotor;
-    private DcMotor leftFlicker;
-    private DcMotor rightFlicker;
     private Servo forkliftServoL;
     private Servo forkliftServoR;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        leftMotor = hardwareMap.dcMotor.get("leftMotor");
-        rightMotor = hardwareMap.dcMotor.get("rightMotor");
+        frontLeftMotor = hardwareMap.dcMotor.get("frontLeftMotor");
+        frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
+        backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
+        backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
         flickerMotor = hardwareMap.dcMotor.get("flickerMotor");
         launchMotor = hardwareMap.dcMotor.get("launchMotor");
-        liftMotor = hardwareMap.dcMotor.get("liftMotor");
         forkliftServoL = hardwareMap.servo.get("forkliftServoL");
         forkliftServoR = hardwareMap.servo.get("forkliftServoR");
-        leftFlicker = hardwareMap.dcMotor.get("leftFlicker");
-        rightFlicker = hardwareMap.dcMotor.get("rightFlicker");
         ArrayList<DcMotor> driveWheels = new ArrayList<DcMotor>();
-        leftMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        backRightMotor.setDirection(DcMotor.Direction.REVERSE);
         flickerMotor.setDirection(DcMotor.Direction.REVERSE);
         launchMotor.setDirection(DcMotor.Direction.REVERSE);
         launchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         launchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightFlicker.setDirection(DcMotor.Direction.REVERSE);
-        forkliftServoL.setDirection(Servo.Direction.REVERSE);
-        forkliftServoR.setDirection(Servo.Direction.FORWARD);
-        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        forkliftServoL.setDirection(Servo.Direction.FORWARD);
+        forkliftServoR.setDirection(Servo.Direction.REVERSE);
+        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         forkliftServoL.setPosition(80);
         forkliftServoR.setPosition(80);
-        driveWheels.add(leftMotor);
-        driveWheels.add(rightMotor);
+        driveWheels.add(frontLeftMotor);
+        driveWheels.add(frontRightMotor);
+        driveWheels.add(backLeftMotor);
+        driveWheels.add(backRightMotor);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();
         runtime.reset();                                                         //START CODE!!!
-        leftMotor.setPower(0.5);
-        rightMotor.setPower(0.5);
+        frontLeftMotor.setPower(0.5);
+        frontRightMotor.setPower(0.5);
+        backLeftMotor.setPower(0.5);
+        backRightMotor.setPower(0.5);
         launchMotor.setPower(0.75);
+
         //drive forward
         driveInches(30, driveWheels);
         sleep(3000);
+
         //launch ball
         launch();
+
         //load second ball
         flickerMotor.setPower(1);
         sleep(3000);
         flickerMotor.setPower(0);
+
         //launch second ball
         launch();
+
         //if no beacons, dislodge ball
 
         //if beacons, drive towards wall depends on color
@@ -122,13 +132,13 @@ public class Autonomous extends LinearOpMode {
 
             //go left
 
-            //go forward
+            //go forward to first beacon (color sensor for line)
 
-            //go left into beacon
+            //go left into beacon (color sensor for beacons)
 
             //go right away from beacon
 
-            //go forward towards second beacon
+            //go forward towards second beacon (color sensor for line)
 
             //go left into beacon
 
@@ -136,7 +146,7 @@ public class Autonomous extends LinearOpMode {
 
             //go right
 
-            //go forward
+            //go forward to first beacon (color sensor for line)
 
             //turn 180
 
@@ -144,19 +154,19 @@ public class Autonomous extends LinearOpMode {
 
             //go right away from beacon
 
-            //go backwards towards second beacon
+            //go backwards towards second beacon (color sensor for line)
 
             //go left into beacon
 
         //end
 
 
-        /*                                   //legacy mecanum code
-        leftMotor.setPower(0.5);
-        rightMotor.setPower(0.5);
+        /*                                   //legacy autonomous code
+        frontLeftMotor.setPower(0.5);
+        frontRightMotor.setPower(0.5);
         driveInches(30, driveWheels);
         sleep(2000);
-        driveInches(30, leftMotor, 1120 / 4);
+        driveInches(30, frontLeftMotor, 1120 / 4);
         flickerMotor.setPower(-0.25);
         sleep(1000);
         flickerMotor.setPower(0);
@@ -169,9 +179,9 @@ public class Autonomous extends LinearOpMode {
         flickerMotor.setPower(0);
         driveInches(40, driveWheels);
         for (int i = 0; i < 2; i++) {
-            driveInches(46, leftMotor);
+            driveInches(46, frontLeftMotor);
             sleep(1500);
-            driveInches(36, leftMotor);
+            driveInches(36, frontLeftMotor);
             sleep(1500);
         }
         driveInches(46, driveWheels);
