@@ -129,6 +129,31 @@ public class ShockwaveDrive extends OpMode {
             frontRightPower = gamepad1.right_stick_y/4;
             backRightPower = gamepad1.right_stick_y/4;
         }
+
+        if(gamepad1.dpad_up){
+            frontLeftPower = (float) 0.25;
+            frontRightPower = (float) 0.25;
+            backLeftPower = (float) 0.25;
+            backRightPower = (float) 0.25;
+        }
+        if(gamepad1.dpad_down){
+            frontLeftPower = (float) -0.25;
+            frontRightPower = (float) -0.25;
+            backLeftPower = (float) -0.25;
+            backRightPower = (float) -0.25;
+        }
+        if(gamepad1.dpad_right){
+            frontLeftPower = (float) 0.25;
+            frontRightPower = (float) -0.25;
+            backLeftPower = (float) -0.25;
+            backRightPower = (float) 0.25;
+        }
+        if(gamepad1.dpad_left){
+            frontLeftPower = (float) -0.25;
+            frontRightPower = (float) 0.25;
+            backLeftPower = (float) 0.25;
+            backRightPower = (float) -0.25;
+        }
         /* end drive mapping */
 
         /* launch motor setting*/
@@ -170,8 +195,8 @@ public class ShockwaveDrive extends OpMode {
 
         /* forklift release */
         if(gamepad1.left_bumper){
-            forkliftServoL.setPosition(255);
-            forkliftServoR.setPosition(255);
+            forkliftServoL.setPosition(0);
+            forkliftServoR.setPosition(0);
         }
 
         /* end forklift release */
