@@ -124,39 +124,45 @@ public class Autonomous extends LinearOpMode {
         //launch second ball
         launch();
 
+        //drive back
+        frontLeftMotor.setTargetPosition(0);
+        backLeftMotor.setTargetPosition(0);
+        frontRightMotor.setTargetPosition(0);
+        backRightMotor.setTargetPosition(0);
+        sleep(5000);
         //if no beacons, dislodge ball
 
         //if beacons, drive towards wall depends on color
 
         //if red
 
-            //go left
+        //go left
 
-            //go forward to first beacon (color sensor for line)
+        //go forward to first beacon (color sensor for line)
 
-            //go left into beacon (color sensor for beacons)
+        //go left into beacon (color sensor for beacons)
 
-            //go right away from beacon
+        //go right away from beacon
 
-            //go forward towards second beacon (color sensor for line)
+        //go forward towards second beacon (color sensor for line)
 
-            //go left into beacon
+        //go left into beacon
 
         //if blue
 
-            //go right
+        //go right
 
-            //go forward to first beacon (color sensor for line)
+        //go forward to first beacon (color sensor for line)
 
-            //turn 180
+        //turn 180
 
-            //go left into beacon
+        //go left into beacon
 
-            //go right away from beacon
+        //go right away from beacon
 
-            //go backwards towards second beacon (color sensor for line)
+        //go backwards towards second beacon (color sensor for line)
 
-            //go left into beacon
+        //go left into beacon
 
         //end
 
