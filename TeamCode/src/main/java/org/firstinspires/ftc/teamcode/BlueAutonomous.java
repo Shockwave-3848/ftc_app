@@ -52,9 +52,9 @@ import java.util.ArrayList;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Shockwave: Autonomous 2016 VelVort", group = "Shockwave")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Shockwave: BLUE: Autonomous 2016 VelVort", group = "Shockwave")
 // @Autonomous(...) is the other common choice
-public class Autonomous extends LinearOpMode {
+public class BlueAutonomous extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     private DcMotor frontLeftMotor;
@@ -65,6 +65,8 @@ public class Autonomous extends LinearOpMode {
     private DcMotor launchMotor;
     private Servo forkliftServoL;
     private Servo forkliftServoR;
+    private final boolean LEFT = true;
+    private final boolean RIGHT = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -110,12 +112,11 @@ public class Autonomous extends LinearOpMode {
         launchMotor.setPower(0.75);
 
         //sleep  = delay at start of match based on alliance partner's needs
-        sleep(10000);
+        //sleep(10000);
 
         //drive forward
         driveInches(30, driveWheels);
-        sleep(3000);
-
+/*
         //launch ball
         launch();
 
@@ -126,42 +127,29 @@ public class Autonomous extends LinearOpMode {
 
         //launch second ball
         launch();
-        sleep(3000);
-
+*/
+/*
+                        //if no beacons, dislodge ball //LEGACY
         //drive forward
-        driveInches(15, driveWheels);
+        motorInches(15, driveWheels);
         sleep(2000);
 
         //drive forward
-        driveInches(8,driveWheels);
+        motorInches(8,driveWheels);
         sleep(2000);
-        
-        //if no beacons, dislodge ball
-
+*/
         //if beacons, drive towards wall depends on color
 
-        //if red
-
-        //go left
-
-        //go forward to first beacon (color sensor for line)
-
-        //go left into beacon (color sensor for beacons)
-
-        //go right away from beacon
-
-        //go forward towards second beacon (color sensor for line)
-
-        //go left into beacon
-
         //if blue
-
         //go right
-
+        slideInches(RIGHT, 30);
         //go forward to first beacon (color sensor for line)
-
+        driveInches(15, driveWheels);
         //turn 180
-
+        backLeftMotor.setTargetPosition(backLeftMotor.getTargetPosition() - 3360);
+        frontLeftMotor.setTargetPosition(frontLeftMotor.getTargetPosition() - 3360);
+        backRightMotor.setTargetPosition(backRightMotor.getTargetPosition() + 3360);
+        frontRightMotor.setTargetPosition(frontRightMotor.getTargetPosition() + 3360);
         //go left into beacon
 
         //go right away from beacon
@@ -172,13 +160,13 @@ public class Autonomous extends LinearOpMode {
 
         //end
 
-
+        sleep(15000);
         /*                                   //legacy autonomous code
         frontLeftMotor.setPower(0.5);
         frontRightMotor.setPower(0.5);
-        driveInches(30, driveWheels);
+        motorInches(30, driveWheels);
         sleep(2000);
-        driveInches(30, frontLeftMotor, 1120 / 4);
+        motorInches(30, frontLeftMotor, 1120 / 4);
         flickerMotor.setPower(-0.25);
         sleep(1000);
         flickerMotor.setPower(0);
@@ -189,14 +177,14 @@ public class Autonomous extends LinearOpMode {
         flickerMotor.setPower(0.25);
         sleep(1000);
         flickerMotor.setPower(0);
-        driveInches(40, driveWheels);
+        motorInches(40, driveWheels);
         for (int i = 0; i < 2; i++) {
-            driveInches(46, frontLeftMotor);
+            motorInches(46, frontLeftMotor);
             sleep(1500);
-            driveInches(36, frontLeftMotor);
+            motorInches(36, frontLeftMotor);
             sleep(1500);
         }
-        driveInches(46, driveWheels);
+        motorInches(46, driveWheels);
         setCollectivePower(0, driveWheels);
 
         while (opModeIsActive()) {
@@ -206,14 +194,16 @@ public class Autonomous extends LinearOpMode {
         */
     }
 
-    void driveInches(int inches, DcMotor motor) {
+    void motorInches(int inches, DcMotor motor) {
         motor.setTargetPosition((int) (motor.getTargetPosition() + (inches / (4 * Math.PI)) * 1120));
+        sleep(inches * 100);
     }
 
     void driveInches(int inches, ArrayList<DcMotor> motors) {
         for (DcMotor motor : motors) {
             motor.setTargetPosition((int) (motor.getTargetPosition() + (inches / (4 * Math.PI)) * 1120));
         }
+        sleep(inches * 100);
     }
 
     void setCollectivePower(float power, ArrayList<DcMotor> motors) {
@@ -224,6 +214,29 @@ public class Autonomous extends LinearOpMode {
 
     void launch() {
         launchMotor.setTargetPosition(launchMotor.getTargetPosition() + 3360);
-        sleep(2500);
+        sleep(1500);
+    }
+
+    void encoderReset(ArrayList<DcMotor> motors) {
+        for (DcMotor motor : motors) {
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+    }
+
+    //if boolean "left" is true, it will slide left, otherwise, slide right
+    void slideInches(boolean direction, int inches) {
+        if (direction) {
+            backLeftMotor.setTargetPosition((int) (backLeftMotor.getTargetPosition() + (inches / (4 * Math.PI)) * 1120));
+            backRightMotor.setTargetPosition((int) (backRightMotor.getTargetPosition() - (inches / (4 * Math.PI)) * 1120));
+            frontLeftMotor.setTargetPosition((int) (frontLeftMotor.getTargetPosition() - (inches / (4 * Math.PI)) * 1120));
+            frontRightMotor.setTargetPosition((int) (frontRightMotor.getTargetPosition() + (inches / (4 * Math.PI)) * 1120));
+        } else {
+            backLeftMotor.setTargetPosition((int) (backLeftMotor.getTargetPosition() - (inches / (4 * Math.PI)) * 1120));
+            backRightMotor.setTargetPosition((int) (backRightMotor.getTargetPosition() + (inches / (4 * Math.PI)) * 1120));
+            frontLeftMotor.setTargetPosition((int) (frontLeftMotor.getTargetPosition() + (inches / (4 * Math.PI)) * 1120));
+            frontRightMotor.setTargetPosition((int) (frontRightMotor.getTargetPosition() - (inches / (4 * Math.PI)) * 1120));
+        }
+        sleep(inches * 100);
     }
 }
