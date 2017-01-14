@@ -126,28 +126,28 @@ public class ShockwaveDrive extends OpMode {
         }
 
         if (gamepad1.dpad_up) {
-            frontLeftPower = (float) 0.25;
-            frontRightPower = (float) 0.25;
-            backLeftPower = (float) 0.25;
-            backRightPower = (float) 0.25;
+            frontLeftPower = (float) 0.15;
+            frontRightPower = (float) 0.15;
+            backLeftPower = (float) 0.15;
+            backRightPower = (float) 0.15;
         }
         if (gamepad1.dpad_down) {
-            frontLeftPower = (float) -0.25;
-            frontRightPower = (float) -0.25;
-            backLeftPower = (float) -0.25;
-            backRightPower = (float) -0.25;
+            frontLeftPower = (float) -0.15;
+            frontRightPower = (float) -0.15;
+            backLeftPower = (float) -0.15;
+            backRightPower = (float) -0.15;
         }
         if (gamepad1.dpad_right) {
-            frontLeftPower = (float) 0.25;
-            frontRightPower = (float) -0.25;
-            backLeftPower = (float) -0.25;
-            backRightPower = (float) 0.25;
+            frontLeftPower = (float) 0.15;
+            frontRightPower = (float) -0.15;
+            backLeftPower = (float) -0.15;
+            backRightPower = (float) 0.15;
         }
         if (gamepad1.dpad_left) {
-            frontLeftPower = (float) -0.25;
-            frontRightPower = (float) 0.25;
-            backLeftPower = (float) 0.25;
-            backRightPower = (float) -0.25;
+            frontLeftPower = (float) -0.15;
+            frontRightPower = (float) 0.15;
+            backLeftPower = (float) 0.15;
+            backRightPower = (float) -0.15;
         }
         /* end drive mapping */
 

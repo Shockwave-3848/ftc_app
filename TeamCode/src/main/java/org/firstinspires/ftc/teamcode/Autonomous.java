@@ -109,6 +109,9 @@ public class Autonomous extends LinearOpMode {
         backRightMotor.setPower(0.5);
         launchMotor.setPower(0.75);
 
+        //sleep  = delay at start of match based on alliance partner's needs
+        sleep(10000);
+
         //drive forward
         driveInches(30, driveWheels);
         sleep(3000);
@@ -123,13 +126,16 @@ public class Autonomous extends LinearOpMode {
 
         //launch second ball
         launch();
+        sleep(3000);
 
-        //drive back
-        frontLeftMotor.setTargetPosition(0);
-        backLeftMotor.setTargetPosition(0);
-        frontRightMotor.setTargetPosition(0);
-        backRightMotor.setTargetPosition(0);
-        sleep(5000);
+        //drive forward
+        driveInches(15, driveWheels);
+        sleep(2000);
+
+        //drive forward
+        driveInches(8,driveWheels);
+        sleep(2000);
+        
         //if no beacons, dislodge ball
 
         //if beacons, drive towards wall depends on color
