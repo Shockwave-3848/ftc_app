@@ -33,6 +33,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -52,9 +53,9 @@ import java.util.ArrayList;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Shockwave: BLUE: Autonomous 2016 VelVort", group = "Shockwave")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "ShockwaveTime: BLUE: Autonomous 2016 VelVort", group = "Shockwave")
 // @Autonomous(...) is the other common choice
-public class BlueAutonomous extends LinearOpMode {
+public class BlueAutonomousTime extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     private DcMotor frontLeftMotor;
@@ -67,6 +68,7 @@ public class BlueAutonomous extends LinearOpMode {
     private Servo forkliftServoR;
     private final boolean LEFT = true;
     private final boolean RIGHT = false;
+    private ColorSensor floorSensor;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -78,6 +80,7 @@ public class BlueAutonomous extends LinearOpMode {
         launchMotor = hardwareMap.dcMotor.get("launchMotor");
         forkliftServoL = hardwareMap.servo.get("forkliftServoL");
         forkliftServoR = hardwareMap.servo.get("forkliftServoR");
+        floorSensor = hardwareMap.colorSensor.get("wallColor");
         ArrayList<DcMotor> driveWheels = new ArrayList<DcMotor>();
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         backRightMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -87,14 +90,6 @@ public class BlueAutonomous extends LinearOpMode {
         launchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         forkliftServoL.setDirection(Servo.Direction.FORWARD);
         forkliftServoR.setDirection(Servo.Direction.REVERSE);
-        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         forkliftServoL.setPosition(80);
         forkliftServoR.setPosition(80);
         driveWheels.add(frontLeftMotor);
@@ -105,100 +100,71 @@ public class BlueAutonomous extends LinearOpMode {
         telemetry.update();
         waitForStart();
         runtime.reset();                                                         //START CODE!!!
-        frontLeftMotor.setPower(0.5);
-        frontRightMotor.setPower(0.5);
-        backLeftMotor.setPower(0.5);
-        backRightMotor.setPower(0.5);
-        launchMotor.setPower(0.75);
-
-        //sleep  = delay at start of match based on alliance partner's needs
-        //sleep(10000);
 
         //drive forward
-        driveInches(30, driveWheels);
-/*
-        //launch ball
-        launch();
-
-        //load second ball
-        flickerMotor.setPower(1);
-        sleep(3000);
-        flickerMotor.setPower(0);
-
-        //launch second ball
-        launch();
-*/
-                        //if no beacons, dislodge ball //LEGACY
-        //drive forward
-        /*
-        motorInches(15, driveWheels);
-        sleep(2000);
-
-        //drive forward
-        motorInches(8,driveWheels);
-        sleep(2000);
-        */
-        //if beacons, drive towards wall depends on colora
-
-        //if blue
-        //go right
-
-        slideInches(RIGHT, 30);
+        //driveInches(30, driveWheels);
+        drive(1200, driveWheels);
+        sleep(500);
+        powerReset();
+        slideTimeRight(4000, driveWheels);
         //slideTimeRight(2500);
         //go forward to first beacon (color sensor for line)
-        driveInches(10, driveWheels);
-        //slideTimeRight(1000);
-        //turn 180
-        backLeftMotor.setTargetPosition(backLeftMotor.getTargetPosition() - 3660);
-        frontLeftMotor.setTargetPosition(frontLeftMotor.getTargetPosition() - 3660);
-        backRightMotor.setTargetPosition(backRightMotor.getTargetPosition() + 3660);
-        frontRightMotor.setTargetPosition(frontRightMotor.getTargetPosition() + 3660);
-        sleep(5);
+        backLeftMotor.setPower(0.25);
+        backRightMotor.setPower(-0.25);
+        frontLeftMotor.setPower(0.25);
+        frontRightMotor.setPower(-0.25);
+        sleep(3000);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
 
-        //slide towards wall
-        slideInches(LEFT, 12);
+        while(floorSensor.alpha() > 0){
+            backLeftMotor.setPower(-0.07);
+            backRightMotor.setPower(-0.07);
+            frontLeftMotor.setPower(-0.07);
+            frontRightMotor.setPower(-0.07);
+        }
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+
+        //slide towards wall/
 
         //TODO Get the adafuit reading and hit button
 
-        //drive to beacon 2
-        driveInchesBackwards(24, driveWheels);
+        //drive to beacon 2/
 
         //TODO Get the adafruit reading and hit button 2
 
         //end
 
         sleep(15000);
-        /*                                   //legacy autonomous code
+    }
+
+    void drive(int time, ArrayList<DcMotor> motors) {
+        backLeftMotor.setPower(0.5);
+        backRightMotor.setPower(0.5);
         frontLeftMotor.setPower(0.5);
         frontRightMotor.setPower(0.5);
-        motorInches(30, driveWheels);
-        sleep(2000);
-        motorInches(30, frontLeftMotor, 1120 / 4);
-        flickerMotor.setPower(-0.25);
-        sleep(1000);
-        flickerMotor.setPower(0);
-        sleep(1000);
-        launchMotor.setPower(1);
-        sleep(1300);
-        launchMotor.setPower(0);
-        flickerMotor.setPower(0.25);
-        sleep(1000);
-        flickerMotor.setPower(0);
-        motorInches(40, driveWheels);
-        for (int i = 0; i < 2; i++) {
-            motorInches(46, frontLeftMotor);
-            sleep(1500);
-            motorInches(36, frontLeftMotor);
-            sleep(1500);
-        }
-        motorInches(46, driveWheels);
-        setCollectivePower(0, driveWheels);
+        sleep(time);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+    }
 
-        while (opModeIsActive()) {
-            telemetry.addData("Status", "Running: " + runtime.toString());
-            telemetry.update();
-        }
-        */
+    void driveBack(int time, ArrayList<DcMotor> motors) {
+        backLeftMotor.setPower(-0.5);
+        backRightMotor.setPower(-0.5);
+        frontLeftMotor.setPower(-0.5);
+        frontRightMotor.setPower(-0.5);
+        sleep(time);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
     }
 
     void motorInches(int inches, DcMotor motor) {
@@ -208,9 +174,12 @@ public class BlueAutonomous extends LinearOpMode {
 
     void driveInches(int inches, ArrayList<DcMotor> motors) {
         for (DcMotor motor : motors) {
-            motor.setTargetPosition((int) (motor.getTargetPosition() + (inches / (4 * Math.PI)) * 1120));
+            motor.setPower(0.5);
         }
         sleep(inches * 100);
+        for (DcMotor motor : motors){
+            motor.setPower(0);
+        }
     }
     void driveInchesBackwards(int inches, ArrayList<DcMotor> motors) {
         for (DcMotor motor : motors) {
@@ -253,22 +222,34 @@ public class BlueAutonomous extends LinearOpMode {
     }
 
     void slideTimeLeft(int time) {
-        backLeftMotor.setPower(0.25);
-        backRightMotor.setPower(-0.25);
-        frontLeftMotor.setPower(-0.25);
-        frontRightMotor.setPower(0.25);
-        sleep(time);
-    }
-
-    void slideTimeRight(int time) {
-        backLeftMotor.setPower(-0.25);
-        backRightMotor.setPower(0.25);
-        frontLeftMotor.setPower(0.25);
-        frontRightMotor.setPower(-0.25);
+        backLeftMotor.setPower(0.5);
+        backRightMotor.setPower(-0.5);
+        frontLeftMotor.setPower(-0.5);
+        frontRightMotor.setPower(0.5);
         sleep(time);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
+    }
+
+    void slideTimeRight(int time, ArrayList<DcMotor> motors) {
+        backLeftMotor.setPower(-0.5);
+        backRightMotor.setPower(0.5);
+        frontLeftMotor.setPower(0.5);
+        frontRightMotor.setPower(-0.5);
+        sleep(time);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+    }
+
+    void powerReset() {
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        sleep(10);
     }
 }

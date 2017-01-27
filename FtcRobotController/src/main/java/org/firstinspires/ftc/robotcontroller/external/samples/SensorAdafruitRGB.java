@@ -110,7 +110,7 @@ public class SensorAdafruitRGB extends LinearOpMode {
     cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
 
     // get a reference to our ColorSensor object.
-    sensorRGB = hardwareMap.colorSensor.get("colorSensor");
+    sensorRGB = hardwareMap.colorSensor.get("wallColor");
 
     // turn the LED on in the beginning, just so user will know that the sensor is active.
     cdim.setDigitalChannelState(LED_CHANNEL, bLedOn);

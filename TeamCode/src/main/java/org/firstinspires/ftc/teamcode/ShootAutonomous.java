@@ -52,9 +52,9 @@ import java.util.ArrayList;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Shockwave: BLUE: Autonomous 2016 VelVort", group = "Shockwave")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Shockwave: Shoot Autonomus 2016 VelVort", group = "Shockwave")
 // @Autonomous(...) is the other common choice
-public class BlueAutonomous extends LinearOpMode {
+public class ShootAutonomous extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     private DcMotor frontLeftMotor;
@@ -111,12 +111,12 @@ public class BlueAutonomous extends LinearOpMode {
         backRightMotor.setPower(0.5);
         launchMotor.setPower(0.75);
 
-        //sleep  = delay at start of match based on alliance partner's needs
-        //sleep(10000);
+        //sleep
+        sleep(10000);
 
         //drive forward
         driveInches(30, driveWheels);
-/*
+
         //launch ball
         launch();
 
@@ -127,78 +127,10 @@ public class BlueAutonomous extends LinearOpMode {
 
         //launch second ball
         launch();
-*/
-                        //if no beacons, dislodge ball //LEGACY
-        //drive forward
-        /*
-        motorInches(15, driveWheels);
-        sleep(2000);
 
-        //drive forward
-        motorInches(8,driveWheels);
-        sleep(2000);
-        */
-        //if beacons, drive towards wall depends on colora
+        driveInches(25, driveWheels);
 
-        //if blue
-        //go right
-
-        slideInches(RIGHT, 30);
-        //slideTimeRight(2500);
-        //go forward to first beacon (color sensor for line)
-        driveInches(10, driveWheels);
-        //slideTimeRight(1000);
-        //turn 180
-        backLeftMotor.setTargetPosition(backLeftMotor.getTargetPosition() - 3660);
-        frontLeftMotor.setTargetPosition(frontLeftMotor.getTargetPosition() - 3660);
-        backRightMotor.setTargetPosition(backRightMotor.getTargetPosition() + 3660);
-        frontRightMotor.setTargetPosition(frontRightMotor.getTargetPosition() + 3660);
-        sleep(5);
-
-        //slide towards wall
-        slideInches(LEFT, 12);
-
-        //TODO Get the adafuit reading and hit button
-
-        //drive to beacon 2
-        driveInchesBackwards(24, driveWheels);
-
-        //TODO Get the adafruit reading and hit button 2
-
-        //end
-
-        sleep(15000);
-        /*                                   //legacy autonomous code
-        frontLeftMotor.setPower(0.5);
-        frontRightMotor.setPower(0.5);
-        motorInches(30, driveWheels);
-        sleep(2000);
-        motorInches(30, frontLeftMotor, 1120 / 4);
-        flickerMotor.setPower(-0.25);
-        sleep(1000);
-        flickerMotor.setPower(0);
-        sleep(1000);
-        launchMotor.setPower(1);
-        sleep(1300);
-        launchMotor.setPower(0);
-        flickerMotor.setPower(0.25);
-        sleep(1000);
-        flickerMotor.setPower(0);
-        motorInches(40, driveWheels);
-        for (int i = 0; i < 2; i++) {
-            motorInches(46, frontLeftMotor);
-            sleep(1500);
-            motorInches(36, frontLeftMotor);
-            sleep(1500);
-        }
-        motorInches(46, driveWheels);
-        setCollectivePower(0, driveWheels);
-
-        while (opModeIsActive()) {
-            telemetry.addData("Status", "Running: " + runtime.toString());
-            telemetry.update();
-        }
-        */
+        sleep(20000);
     }
 
     void motorInches(int inches, DcMotor motor) {
@@ -212,12 +144,7 @@ public class BlueAutonomous extends LinearOpMode {
         }
         sleep(inches * 100);
     }
-    void driveInchesBackwards(int inches, ArrayList<DcMotor> motors) {
-        for (DcMotor motor : motors) {
-            motor.setTargetPosition((int) (motor.getTargetPosition() - (inches / (4 * Math.PI)) * 1120));
-        }
-        sleep(inches * 100);
-    }
+
     void setCollectivePower(float power, ArrayList<DcMotor> motors) {
         for (DcMotor motor : motors) {
             motor.setPower(power);

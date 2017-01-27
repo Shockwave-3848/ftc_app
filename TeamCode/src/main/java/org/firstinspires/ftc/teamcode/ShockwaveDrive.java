@@ -162,7 +162,7 @@ public class ShockwaveDrive extends OpMode {
 
         /* lift motor setting */
         if (gamepad2.dpad_up) {
-            liftMotor.setPower(0.5);
+            liftMotor.setPower(1);
             telemetry.addData("Status", "Running: ", "Lift Up");
         } else if (gamepad2.dpad_down) { //TODO: Make autonomous positions using encoders
             liftMotor.setPower(-0.25);
