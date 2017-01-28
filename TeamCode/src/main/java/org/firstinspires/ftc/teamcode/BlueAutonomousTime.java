@@ -80,7 +80,7 @@ public class BlueAutonomousTime extends LinearOpMode {
         launchMotor = hardwareMap.dcMotor.get("launchMotor");
         forkliftServoL = hardwareMap.servo.get("forkliftServoL");
         forkliftServoR = hardwareMap.servo.get("forkliftServoR");
-        floorSensor = hardwareMap.colorSensor.get("wallColor");
+        floorSensor = hardwareMap.colorSensor.get("floorColor");
         ArrayList<DcMotor> driveWheels = new ArrayList<DcMotor>();
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         backRightMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -118,18 +118,31 @@ public class BlueAutonomousTime extends LinearOpMode {
         backRightMotor.setPower(0);
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
-
+        sleep(500);
+        driveBack(400, driveWheels);
         while(floorSensor.alpha() > 0){
-            backLeftMotor.setPower(-0.07);
-            backRightMotor.setPower(-0.07);
-            frontLeftMotor.setPower(-0.07);
-            frontRightMotor.setPower(-0.07);
+            backLeftMotor.setPower(-0.09);
+            backRightMotor.setPower(-0.09);
+            frontLeftMotor.setPower(-0.09);
+            frontRightMotor.setPower(-0.09);
+            telemetry.addData("Alpha", floorSensor.alpha());
+            telemetry.addData("Red", floorSensor.red());
+            telemetry.addData("Green", floorSensor.green());
+            telemetry.addData("Blue", floorSensor.blue());
         }
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
-
+        backLeftMotor.setPower(0.5);
+        backRightMotor.setPower(-0.5);
+        frontLeftMotor.setPower(-0.5);
+        frontRightMotor.setPower(0.5);
+        sleep(2000);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
         //slide towards wall/
 
         //TODO Get the adafuit reading and hit button
@@ -156,10 +169,10 @@ public class BlueAutonomousTime extends LinearOpMode {
     }
 
     void driveBack(int time, ArrayList<DcMotor> motors) {
-        backLeftMotor.setPower(-0.5);
-        backRightMotor.setPower(-0.5);
-        frontLeftMotor.setPower(-0.5);
-        frontRightMotor.setPower(-0.5);
+        backLeftMotor.setPower(-0.25);
+        backRightMotor.setPower(-0.25);
+        frontLeftMotor.setPower(-0.25);
+        frontRightMotor.setPower(-0.25);
         sleep(time);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
