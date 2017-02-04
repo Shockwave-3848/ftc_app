@@ -33,7 +33,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -53,9 +52,9 @@ import java.util.ArrayList;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "ShockwaveTime: BLUE: Autonomous 2016 VelVort", group = "Shockwave")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Shockwave: Blue Shoot Autonomus", group = "Shockwave")
 // @Autonomous(...) is the other common choice
-public class BlueAutonomousTime extends LinearOpMode {
+public class BlueShootAutonomous extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     private DcMotor frontLeftMotor;
@@ -68,7 +67,6 @@ public class BlueAutonomousTime extends LinearOpMode {
     private Servo forkliftServoR;
     private final boolean LEFT = true;
     private final boolean RIGHT = false;
-    private ColorSensor floorSensor;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -80,7 +78,6 @@ public class BlueAutonomousTime extends LinearOpMode {
         launchMotor = hardwareMap.dcMotor.get("launchMotor");
         forkliftServoL = hardwareMap.servo.get("forkliftServoL");
         forkliftServoR = hardwareMap.servo.get("forkliftServoR");
-        floorSensor = hardwareMap.colorSensor.get("floorColor");
         ArrayList<DcMotor> driveWheels = new ArrayList<DcMotor>();
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         backRightMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -100,60 +97,61 @@ public class BlueAutonomousTime extends LinearOpMode {
         telemetry.update();
         waitForStart();
         runtime.reset();                                                         //START CODE!!!
+        frontLeftMotor.setPower(0.5);
+        frontRightMotor.setPower(0.5);
+        backLeftMotor.setPower(0.5);
+        backRightMotor.setPower(0.5);
+        launchMotor.setPower(0.75);
 
         //drive forward
-        //driveInches(30, driveWheels);
-        drive(1200, driveWheels);
-        sleep(500);
-        powerReset();
-        slideTimeRight(4000, driveWheels);
-        //slideTimeRight(2500);
-        //go forward to first beacon (color sensor for line)
+        drive(1000, driveWheels);
         backLeftMotor.setPower(0.25);
-        backRightMotor.setPower(-0.25);
+        backRightMotor.setPower(0.25);
         frontLeftMotor.setPower(0.25);
-        frontRightMotor.setPower(-0.25);
+        frontRightMotor.setPower(0.25);
+        sleep(200);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        sleep(1000);
+
+        //launch ball
+        launch();
+
+        //load second ball
+        flickerMotor.setPower(1);
         sleep(3000);
-        backLeftMotor.setPower(0);
-        backRightMotor.setPower(0);
-        frontLeftMotor.setPower(0);
-        frontRightMotor.setPower(0);
-        sleep(500);
-        driveBack(400, driveWheels);
-        while(floorSensor.alpha() > 0){
-            backLeftMotor.setPower(-0.09);
-            backRightMotor.setPower(-0.09);
-            frontLeftMotor.setPower(-0.09);
-            frontRightMotor.setPower(-0.09);
-            telemetry.addData("Alpha", floorSensor.alpha());
-            telemetry.addData("Red", floorSensor.red());
-            telemetry.addData("Green", floorSensor.green());
-            telemetry.addData("Blue", floorSensor.blue());
-        }
-        backLeftMotor.setPower(0);
-        backRightMotor.setPower(0);
-        frontLeftMotor.setPower(0);
-        frontRightMotor.setPower(0);
-        backLeftMotor.setPower(0.5);
-        backRightMotor.setPower(-0.5);
+        flickerMotor.setPower(0);
+
+        //launch second ball
+        launch();
+
+        //slide
         frontLeftMotor.setPower(-0.5);
         frontRightMotor.setPower(0.5);
-        sleep(2000);
-        backLeftMotor.setPower(0);
-        backRightMotor.setPower(0);
+        backLeftMotor.setPower(0.5);
+        backRightMotor.setPower(-0.5);
+        sleep(1500);
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
-        //slide towards wall/
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
 
-        //TODO Get the adafuit reading and hit button
+        //turn
+        frontLeftMotor.setPower(0.5);
+        backLeftMotor.setPower(0.5);
+        frontRightMotor.setPower(-0.5);
+        backRightMotor.setPower(-0.5);
+        sleep(250);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
 
-        //drive to beacon 2/
+        drive(1000, driveWheels);
 
-        //TODO Get the adafruit reading and hit button 2
-
-        //end
-
-        sleep(15000);
+        sleep(20000);
     }
 
     void drive(int time, ArrayList<DcMotor> motors) {
@@ -180,6 +178,14 @@ public class BlueAutonomousTime extends LinearOpMode {
         frontRightMotor.setPower(0);
     }
 
+    void powerReset() {
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        sleep(10);
+    }
+
     void motorInches(int inches, DcMotor motor) {
         motor.setTargetPosition((int) (motor.getTargetPosition() + (inches / (4 * Math.PI)) * 1120));
         sleep(inches * 100);
@@ -187,19 +193,11 @@ public class BlueAutonomousTime extends LinearOpMode {
 
     void driveInches(int inches, ArrayList<DcMotor> motors) {
         for (DcMotor motor : motors) {
-            motor.setPower(0.5);
-        }
-        sleep(inches * 100);
-        for (DcMotor motor : motors){
-            motor.setPower(0);
-        }
-    }
-    void driveInchesBackwards(int inches, ArrayList<DcMotor> motors) {
-        for (DcMotor motor : motors) {
-            motor.setTargetPosition((int) (motor.getTargetPosition() - (inches / (4 * Math.PI)) * 1120));
+            motor.setTargetPosition((int) (motor.getTargetPosition() + (inches / (4 * Math.PI)) * 1120));
         }
         sleep(inches * 100);
     }
+
     void setCollectivePower(float power, ArrayList<DcMotor> motors) {
         for (DcMotor motor : motors) {
             motor.setPower(power);
@@ -235,34 +233,22 @@ public class BlueAutonomousTime extends LinearOpMode {
     }
 
     void slideTimeLeft(int time) {
-        backLeftMotor.setPower(0.5);
-        backRightMotor.setPower(-0.5);
-        frontLeftMotor.setPower(-0.5);
-        frontRightMotor.setPower(0.5);
+        backLeftMotor.setPower(0.25);
+        backRightMotor.setPower(-0.25);
+        frontLeftMotor.setPower(-0.25);
+        frontRightMotor.setPower(0.25);
+        sleep(time);
+    }
+
+    void slideTimeRight(int time) {
+        backLeftMotor.setPower(-0.25);
+        backRightMotor.setPower(0.25);
+        frontLeftMotor.setPower(0.25);
+        frontRightMotor.setPower(-0.25);
         sleep(time);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
-    }
-
-    void slideTimeRight(int time, ArrayList<DcMotor> motors) {
-        backLeftMotor.setPower(-0.5);
-        backRightMotor.setPower(0.5);
-        frontLeftMotor.setPower(0.5);
-        frontRightMotor.setPower(-0.5);
-        sleep(time);
-        backLeftMotor.setPower(0);
-        backRightMotor.setPower(0);
-        frontLeftMotor.setPower(0);
-        frontRightMotor.setPower(0);
-    }
-
-    void powerReset() {
-        backLeftMotor.setPower(0);
-        backRightMotor.setPower(0);
-        frontLeftMotor.setPower(0);
-        frontRightMotor.setPower(0);
-        sleep(10);
     }
 }

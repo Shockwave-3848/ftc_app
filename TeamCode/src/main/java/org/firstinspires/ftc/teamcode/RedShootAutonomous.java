@@ -52,9 +52,9 @@ import java.util.ArrayList;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Shockwave: BLUE: Autonomous 2016 VelVort", group = "Shockwave")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Shockwave: Red Shoot Autonomus", group = "Shockwave")
 // @Autonomous(...) is the other common choice
-public class BlueAutonomous extends LinearOpMode {
+public class RedShootAutonomous extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     private DcMotor frontLeftMotor;
@@ -87,14 +87,6 @@ public class BlueAutonomous extends LinearOpMode {
         launchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         forkliftServoL.setDirection(Servo.Direction.FORWARD);
         forkliftServoR.setDirection(Servo.Direction.REVERSE);
-        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         forkliftServoL.setPosition(80);
         forkliftServoR.setPosition(80);
         driveWheels.add(frontLeftMotor);
@@ -111,12 +103,19 @@ public class BlueAutonomous extends LinearOpMode {
         backRightMotor.setPower(0.5);
         launchMotor.setPower(0.75);
 
-        //sleep  = delay at start of match based on alliance partner's needs
-        //sleep(10000);
-
         //drive forward
-        driveInches(30, driveWheels);
-/*
+        drive(1000, driveWheels);
+        backLeftMotor.setPower(0.25);
+        backRightMotor.setPower(0.25);
+        frontLeftMotor.setPower(0.25);
+        frontRightMotor.setPower(0.25);
+        sleep(200);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        sleep(1000);
+
         //launch ball
         launch();
 
@@ -127,78 +126,64 @@ public class BlueAutonomous extends LinearOpMode {
 
         //launch second ball
         launch();
-*/
-                        //if no beacons, dislodge ball //LEGACY
-        //drive forward
-        /*
-        motorInches(15, driveWheels);
-        sleep(2000);
 
-        //drive forward
-        motorInches(8,driveWheels);
-        sleep(2000);
-        */
-        //if beacons, drive towards wall depends on colora
+        //slide
+        frontLeftMotor.setPower(0.5);
+        frontRightMotor.setPower(-0.5);
+        backLeftMotor.setPower(-0.5);
+        backRightMotor.setPower(0.5);
+        sleep(1500);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
 
-        //if blue
-        //go right
+        //turn
+        frontLeftMotor.setPower(-0.5);
+        backLeftMotor.setPower(-0.5);
+        frontRightMotor.setPower(0.5);
+        backRightMotor.setPower(0.5);
+        sleep(250);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
 
-        slideInches(RIGHT, 30);
-        //slideTimeRight(2500);
-        //go forward to first beacon (color sensor for line)
-        driveInches(10, driveWheels);
-        //slideTimeRight(1000);
-        //turn 180
-        backLeftMotor.setTargetPosition(backLeftMotor.getTargetPosition() - 3660);
-        frontLeftMotor.setTargetPosition(frontLeftMotor.getTargetPosition() - 3660);
-        backRightMotor.setTargetPosition(backRightMotor.getTargetPosition() + 3660);
-        frontRightMotor.setTargetPosition(frontRightMotor.getTargetPosition() + 3660);
-        sleep(5);
+        drive(1000, driveWheels);
 
-        //slide towards wall
-        slideInches(LEFT, 12);
+        sleep(20000);
+    }
 
-        //TODO Get the adafuit reading and hit button
-
-        //drive to beacon 2
-        driveInchesBackwards(24, driveWheels);
-
-        //TODO Get the adafruit reading and hit button 2
-
-        //end
-
-        sleep(15000);
-        /*                                   //legacy autonomous code
+    void drive(int time, ArrayList<DcMotor> motors) {
+        backLeftMotor.setPower(0.5);
+        backRightMotor.setPower(0.5);
         frontLeftMotor.setPower(0.5);
         frontRightMotor.setPower(0.5);
-        motorInches(30, driveWheels);
-        sleep(2000);
-        motorInches(30, frontLeftMotor, 1120 / 4);
-        flickerMotor.setPower(-0.25);
-        sleep(1000);
-        flickerMotor.setPower(0);
-        sleep(1000);
-        launchMotor.setPower(1);
-        sleep(1300);
-        launchMotor.setPower(0);
-        flickerMotor.setPower(0.25);
-        sleep(1000);
-        flickerMotor.setPower(0);
-        motorInches(40, driveWheels);
-        for (int i = 0; i < 2; i++) {
-            motorInches(46, frontLeftMotor);
-            sleep(1500);
-            motorInches(36, frontLeftMotor);
-            sleep(1500);
-        }
-        motorInches(46, driveWheels);
-        setCollectivePower(0, driveWheels);
+        sleep(time);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+    }
 
-        while (opModeIsActive()) {
-            telemetry.addData("Status", "Running: " + runtime.toString());
-            telemetry.update();
-        }
-        */
+    void driveBack(int time, ArrayList<DcMotor> motors) {
+        backLeftMotor.setPower(-0.25);
+        backRightMotor.setPower(-0.25);
+        frontLeftMotor.setPower(-0.25);
+        frontRightMotor.setPower(-0.25);
+        sleep(time);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+    }
+
+    void powerReset() {
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        sleep(10);
     }
 
     void motorInches(int inches, DcMotor motor) {
@@ -212,12 +197,7 @@ public class BlueAutonomous extends LinearOpMode {
         }
         sleep(inches * 100);
     }
-    void driveInchesBackwards(int inches, ArrayList<DcMotor> motors) {
-        for (DcMotor motor : motors) {
-            motor.setTargetPosition((int) (motor.getTargetPosition() - (inches / (4 * Math.PI)) * 1120));
-        }
-        sleep(inches * 100);
-    }
+
     void setCollectivePower(float power, ArrayList<DcMotor> motors) {
         for (DcMotor motor : motors) {
             motor.setPower(power);

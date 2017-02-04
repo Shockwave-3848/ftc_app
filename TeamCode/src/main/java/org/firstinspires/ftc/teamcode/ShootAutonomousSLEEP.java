@@ -52,9 +52,9 @@ import java.util.ArrayList;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Shockwave: RED: Autonomous 2016 VelVort", group = "Shockwave")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Shockwave: [SLEEP] Diagonal Shoot Autonomus", group = "Shockwave")
 // @Autonomous(...) is the other common choice
-public class RedAutonomous extends LinearOpMode {
+public class ShootAutonomousSLEEP extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     private DcMotor frontLeftMotor;
@@ -65,6 +65,8 @@ public class RedAutonomous extends LinearOpMode {
     private DcMotor launchMotor;
     private Servo forkliftServoL;
     private Servo forkliftServoR;
+    private final boolean LEFT = true;
+    private final boolean RIGHT = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -85,15 +87,9 @@ public class RedAutonomous extends LinearOpMode {
         launchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         forkliftServoL.setDirection(Servo.Direction.FORWARD);
         forkliftServoR.setDirection(Servo.Direction.REVERSE);
-        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         forkliftServoL.setPosition(80);
+
+
         forkliftServoR.setPosition(80);
         driveWheels.add(frontLeftMotor);
         driveWheels.add(frontRightMotor);
@@ -103,18 +99,26 @@ public class RedAutonomous extends LinearOpMode {
         telemetry.update();
         waitForStart();
         runtime.reset();                                                         //START CODE!!!
+        sleep(10000);
         frontLeftMotor.setPower(0.5);
         frontRightMotor.setPower(0.5);
         backLeftMotor.setPower(0.5);
         backRightMotor.setPower(0.5);
         launchMotor.setPower(0.75);
 
-        //sleep  = delay at start of match based on alliance partner's needs
-        sleep(10000);
-
         //drive forward
-        driveInches(30, driveWheels);
-        sleep(3000);
+        drive(1200, driveWheels);
+        backLeftMotor.setPower(0.25);
+        backRightMotor.setPower(0.25);
+        frontLeftMotor.setPower(0.25);
+        frontRightMotor.setPower(0.25);
+        sleep(400);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        sleep(1000);
+        //powerReset();
 
         //launch ball
         launch();
@@ -126,77 +130,56 @@ public class RedAutonomous extends LinearOpMode {
 
         //launch second ball
         launch();
-        sleep(3000);
-/*
-                        //if no beacons, dislodge ball //LEGACY
-        //drive forward
-        motorInches(15, driveWheels);
-        sleep(2000);
 
-        //drive forward
-        motorInches(8,driveWheels);
-        sleep(2000);
-*/
-        //if beacons, drive towards wall depends on color
+        drive(1000, driveWheels);
+        sleep(500);
+        powerReset();
 
-        //if red
-
-            //go left
-
-            //go forward to first beacon (color sensor for line)
-
-            //go left into beacon (color sensor for beacons)
-
-            //go right away from beacon
-
-            //go forward towards second beacon (color sensor for line)
-
-            //go left into beacon
-
-        //end
-
-
-        /*                                   //legacy autonomous code
-        frontLeftMotor.setPower(0.5);
-        frontRightMotor.setPower(0.5);
-        motorInches(30, driveWheels);
-        sleep(2000);
-        motorInches(30, frontLeftMotor, 1120 / 4);
-        flickerMotor.setPower(-0.25);
-        sleep(1000);
-        flickerMotor.setPower(0);
-        sleep(1000);
-        launchMotor.setPower(1);
-        sleep(1300);
-        launchMotor.setPower(0);
-        flickerMotor.setPower(0.25);
-        sleep(1000);
-        flickerMotor.setPower(0);
-        motorInches(40, driveWheels);
-        for (int i = 0; i < 2; i++) {
-            motorInches(46, frontLeftMotor);
-            sleep(1500);
-            motorInches(36, frontLeftMotor);
-            sleep(1500);
-        }
-        motorInches(46, driveWheels);
-        setCollectivePower(0, driveWheels);
-
-        while (opModeIsActive()) {
-            telemetry.addData("Status", "Running: " + runtime.toString());
-            telemetry.update();
-        }
-        */
+        sleep(20000);
     }
 
-    void driveInches(int inches, DcMotor motor) {
+    void drive(int time, ArrayList<DcMotor> motors) {
+        backLeftMotor.setPower(0.5);
+        backRightMotor.setPower(0.5);
+        frontLeftMotor.setPower(0.5);
+        frontRightMotor.setPower(0.5);
+        sleep(time);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+    }
+
+    void driveBack(int time, ArrayList<DcMotor> motors) {
+        backLeftMotor.setPower(-0.25);
+        backRightMotor.setPower(-0.25);
+        frontLeftMotor.setPower(-0.25);
+        frontRightMotor.setPower(-0.25);
+        sleep(time);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+    }
+
+    void powerReset() {
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        sleep(10);
+    }
+
+    void motorInches(int inches, DcMotor motor) {
         motor.setTargetPosition((int) (motor.getTargetPosition() + (inches / (4 * Math.PI)) * 1120));
+        sleep(inches * 100);
     }
 
     void driveInches(int inches, ArrayList<DcMotor> motors) {
         for (DcMotor motor : motors) {
             motor.setTargetPosition((int) (motor.getTargetPosition() + (inches / (4 * Math.PI)) * 1120));
         }
+        sleep(inches * 100);
     }
 
     void setCollectivePower(float power, ArrayList<DcMotor> motors) {
@@ -207,6 +190,49 @@ public class RedAutonomous extends LinearOpMode {
 
     void launch() {
         launchMotor.setTargetPosition(launchMotor.getTargetPosition() + 3360);
-        sleep(2500);
+        sleep(1500);
+    }
+
+    void encoderReset(ArrayList<DcMotor> motors) {
+        for (DcMotor motor : motors) {
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+    }
+
+    //if boolean "left" is true, it will slide left, otherwise, slide right
+    void slideInches(boolean direction, int inches) {
+        if (direction) {
+            backLeftMotor.setTargetPosition((int) (backLeftMotor.getTargetPosition() + (inches / (4 * Math.PI)) * 1120));
+            backRightMotor.setTargetPosition((int) (backRightMotor.getTargetPosition() - (inches / (4 * Math.PI)) * 1120));
+            frontLeftMotor.setTargetPosition((int) (frontLeftMotor.getTargetPosition() - (inches / (4 * Math.PI)) * 1120));
+            frontRightMotor.setTargetPosition((int) (frontRightMotor.getTargetPosition() + (inches / (4 * Math.PI)) * 1120));
+        } else {
+            backLeftMotor.setTargetPosition((int) (backLeftMotor.getTargetPosition() - (inches / (4 * Math.PI)) * 1120));
+            backRightMotor.setTargetPosition((int) (backRightMotor.getTargetPosition() + (inches / (4 * Math.PI)) * 1120));
+            frontLeftMotor.setTargetPosition((int) (frontLeftMotor.getTargetPosition() + (inches / (4 * Math.PI)) * 1120));
+            frontRightMotor.setTargetPosition((int) (frontRightMotor.getTargetPosition() - (inches / (4 * Math.PI)) * 1120));
+        }
+        sleep(inches * 100);
+    }
+
+    void slideTimeLeft(int time) {
+        backLeftMotor.setPower(0.25);
+        backRightMotor.setPower(-0.25);
+        frontLeftMotor.setPower(-0.25);
+        frontRightMotor.setPower(0.25);
+        sleep(time);
+    }
+
+    void slideTimeRight(int time) {
+        backLeftMotor.setPower(-0.25);
+        backRightMotor.setPower(0.25);
+        frontLeftMotor.setPower(0.25);
+        frontRightMotor.setPower(-0.25);
+        sleep(time);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
     }
 }

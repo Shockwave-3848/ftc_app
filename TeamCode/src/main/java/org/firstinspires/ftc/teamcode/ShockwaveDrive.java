@@ -38,7 +38,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "Shockwave: TeleOp 2016 VelVort", group = "Shockwave")
+@TeleOp(name = "Shockwave: TeleOp", group = "Shockwave")
 //@Disabled
 public class ShockwaveDrive extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();

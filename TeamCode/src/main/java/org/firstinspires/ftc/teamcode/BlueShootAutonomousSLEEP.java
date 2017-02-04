@@ -52,9 +52,9 @@ import java.util.ArrayList;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Shockwave: Diagonal Shoot Autonomus", group = "Shockwave")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Shockwave: [SLEEP] Blue Shoot Autonomus", group = "Shockwave")
 // @Autonomous(...) is the other common choice
-public class ShootAutonomous extends LinearOpMode {
+public class BlueShootAutonomousSLEEP extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     private DcMotor frontLeftMotor;
@@ -88,8 +88,6 @@ public class ShootAutonomous extends LinearOpMode {
         forkliftServoL.setDirection(Servo.Direction.FORWARD);
         forkliftServoR.setDirection(Servo.Direction.REVERSE);
         forkliftServoL.setPosition(80);
-
-
         forkliftServoR.setPosition(80);
         driveWheels.add(frontLeftMotor);
         driveWheels.add(frontRightMotor);
@@ -99,6 +97,7 @@ public class ShootAutonomous extends LinearOpMode {
         telemetry.update();
         waitForStart();
         runtime.reset();                                                         //START CODE!!!
+        sleep(10000);
         frontLeftMotor.setPower(0.5);
         frontRightMotor.setPower(0.5);
         backLeftMotor.setPower(0.5);
@@ -106,18 +105,17 @@ public class ShootAutonomous extends LinearOpMode {
         launchMotor.setPower(0.75);
 
         //drive forward
-        drive(1200, driveWheels);
+        drive(1000, driveWheels);
         backLeftMotor.setPower(0.25);
         backRightMotor.setPower(0.25);
         frontLeftMotor.setPower(0.25);
         frontRightMotor.setPower(0.25);
-        sleep(400);
+        sleep(200);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
         sleep(1000);
-        //powerReset();
 
         //launch ball
         launch();
@@ -130,9 +128,29 @@ public class ShootAutonomous extends LinearOpMode {
         //launch second ball
         launch();
 
+        //slide
+        frontLeftMotor.setPower(-0.5);
+        frontRightMotor.setPower(0.5);
+        backLeftMotor.setPower(0.5);
+        backRightMotor.setPower(-0.5);
+        sleep(1500);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+
+        //turn
+        frontLeftMotor.setPower(0.5);
+        backLeftMotor.setPower(0.5);
+        frontRightMotor.setPower(-0.5);
+        backRightMotor.setPower(-0.5);
+        sleep(250);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+
         drive(1000, driveWheels);
-        sleep(500);
-        powerReset();
 
         sleep(20000);
     }
