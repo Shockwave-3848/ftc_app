@@ -52,7 +52,9 @@ public class VuforiaOp extends LinearOpMode {
 
         VuforiaTrackableDefaultListener wheels = (VuforiaTrackableDefaultListener) beacons.get(0).getListener();
 
-        beacons.activate(); //activate trackinge
+        //waitForStart();?
+
+        beacons.activate(); //activate tracking
         //set runmode
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -112,8 +114,71 @@ public class VuforiaOp extends LinearOpMode {
         frontRightMotor.setPower(0);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
+
+        //Set mode for encoders
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //Do stuff
+        frontLeftMotor.setTargetPosition((int) (frontLeftMotor.getCurrentPosition() + ((Math.hypot(trans.get(0), trans.get(2)) + 100) / 4 * Math.PI * 25.4 * 1120)));//100 is the distance in mm from the axis of turning to the center of the phone.
+        frontRightMotor.setTargetPosition((int) (frontRightMotor.getCurrentPosition() + ((Math.hypot(trans.get(0), trans.get(2)) + 100) / 4 * Math.PI * 25.4 * 1120)));
+        backLeftMotor.setTargetPosition((int) (backLeftMotor.getCurrentPosition() + ((Math.hypot(trans.get(0), trans.get(2)) + 100) / 4 * Math.PI * 25.4 * 1120)));
+        backRightMotor.setTargetPosition((int) (backRightMotor.getCurrentPosition() + ((Math.hypot(trans.get(0), trans.get(2)) + 100) / 4 * Math.PI * 25.4 * 1120)));
+
+        //Drive
+        frontLeftMotor.setPower(0.3);
+        frontRightMotor.setPower(0.3);
+        backLeftMotor.setPower(0.3);
+        backRightMotor.setPower(0.3);
+
+        while (opModeIsActive() && frontLeftMotor.isBusy() && frontRightMotor.isBusy() && backLeftMotor.isBusy() && backRightMotor.isBusy()) {
+            idle();
+        }
+        //Stop
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+
+        //set runmode
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        while (opModeIsActive() && (wheels.getPose() == null || Math.abs(wheels.getPose().getTranslation().get(0)) > 10)) {
+            if (wheels.getPose() != null) {
+                if (wheels.getPose().getTranslation().get(0) > 0) {
+                    //Turn to left
+                    frontLeftMotor.setPower(-0.3);
+                    frontRightMotor.setPower(0.3);
+                    backLeftMotor.setPower(-0.3);
+                    backRightMotor.setPower(0.3);
+                } else {
+                    //Turn to right
+                    frontLeftMotor.setPower(0.3);
+                    frontRightMotor.setPower(-0.3);
+                    backLeftMotor.setPower(0.3);
+                    backRightMotor.setPower(-0.3);
+                }
+            } else {
+                //Turn to right
+                frontLeftMotor.setPower(0.3);
+                frontRightMotor.setPower(-0.3);
+                backLeftMotor.setPower(0.3);
+                backRightMotor.setPower(-0.3);
+            }
+        }
+
+        //Stop
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
     }
-    
+
     public VectorF navOffWall(VectorF trans, double robotAngle, VectorF offWall) {
         return new VectorF((float) (trans.get(0) - offWall.get(0) * Math.sin(Math.toRadians(robotAngle)) - offWall.get(2) * Math.cos(Math.toRadians(robotAngle))), trans.get(1), (float) (trans.get(2) + offWall.get(0) * Math.cos(Math.toRadians(robotAngle)) - offWall.get(2) * Math.sin(Math.toRadians(robotAngle))));
     }
