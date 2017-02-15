@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES;
+import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.Parameters.CameraMonitorFeedback.BUILDINGS;
 
 /**
  * Created by Morgan on 2/7/2017.
@@ -23,9 +23,9 @@ public class VuforiaDemonstrationOp extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
         VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
-        params.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+        params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         params.vuforiaLicenseKey = "Aa83fhD/////AAAAGSreheLdukF2jypD8HJoFgQqlRprE9XRkf4XhrjfDP8jqGm87y+kPUTCNqZE+fFB5raNLLV3o8eaPysaRCvB92gLKgGMXwCB+329W03utrqsgSsXtp6xoqYYg3fZiFWzp0og3AkodJHWrC/IN0oFuEXthsRsDk2SUebG8EnKHDOivyvbQ2w3O7nsEOB1EMBK8UYxnb8RR1Iw0XqwFGwbo5LNLx+8nwQjkRAQfAtzXSC3O+yJ86FxAieglPCZFLeYJn9Pl/VQjVeKGrttwK7uJz4Qwf7YKyfoluyBIJd9RlJ0EwD7HYht9jyD0PMQpHHQB5y9EO3LPQ48fmq7BgoFtwUJVMCt2oKfFbDOoVIgQ4PG";
-        params.cameraMonitorFeedback = AXES;
+        params.cameraMonitorFeedback = BUILDINGS;
 
         VuforiaLocalizer vuforia = ClassFactory.createVuforiaLocalizer(params);
         Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);

@@ -83,7 +83,7 @@ public class VuforiaOp extends LinearOpMode {
         frontRightMotor.setPower(0);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
-
+        sleep(1000);
         //Analyze beacon (Next video)
 
         VectorF angles = anglesFromTarget(wheels); //get angles
