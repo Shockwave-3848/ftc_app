@@ -52,7 +52,7 @@ public class VuforiaOp extends LinearOpMode {
 
         VuforiaTrackableDefaultListener wheels = (VuforiaTrackableDefaultListener) beacons.get(0).getListener();
 
-        //waitForStart();?
+        waitForStart();
 
         beacons.activate(); //activate tracking
         //set runmode
