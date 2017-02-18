@@ -61,12 +61,28 @@ public class ODSAutonomous extends LinearOpMode {
         frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //turn back to position
+        frontLeftMotor.setPower(0.25);
+        backLeftMotor.setPower(0.25);
+        sleep(1600);
+        frontLeftMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        //drive forward to be level with beacon
+        frontLeftMotor.setPower(0.25);
+        frontRightMotor.setPower(0.25);
+        backLeftMotor.setPower(0.25);
+        backRightMotor.setPower(0.25);
+        sleep(1500);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
         //drive until we get close
-        while (ods.getLightDetected() < 0.006) {
-            frontLeftMotor.setPower(0.25);
-            frontRightMotor.setPower(0.25);
-            backLeftMotor.setPower(0.25);
-            backRightMotor.setPower(0.25);
+        while (ods.getLightDetected() < 0.016) {
+            frontLeftMotor.setPower(-0.5);
+            frontRightMotor.setPower(0.5);
+            backLeftMotor.setPower(0.5);
+            backRightMotor.setPower(-0.5);
             idle();
         }
         frontLeftMotor.setPower(0);
