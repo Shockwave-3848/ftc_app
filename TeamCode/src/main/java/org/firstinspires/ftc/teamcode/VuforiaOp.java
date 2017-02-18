@@ -66,18 +66,6 @@ public class VuforiaOp extends LinearOpMode {
         backLeftMotor.setPower(0.25);
         backRightMotor.setPower(0.25);
         sleep(1000);
-        frontLeftMotor.setPower(0);
-        frontRightMotor.setPower(0.25);
-        backLeftMotor.setPower(0);
-        backRightMotor.setPower(0.25);
-        sleep(500);
-        frontLeftMotor.setPower(0.2);
-        frontRightMotor.setPower(0.2);
-        backLeftMotor.setPower(0.2);
-        backRightMotor.setPower(0.2);
-        while (opModeIsActive() && wheels.getRawPose() == null) { //While we can't see the beacons, drive forward
-            idle();
-        }
         //Stop (after beacons have been seen)
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
