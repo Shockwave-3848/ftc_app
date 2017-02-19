@@ -78,12 +78,36 @@ public class ODSAutonomous extends LinearOpMode {
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
         //drive until we get close
-        while (ods.getLightDetected() < 0.016) {
+        while (ods.getLightDetected() > 0.0016) {
             frontLeftMotor.setPower(-0.5);
             frontRightMotor.setPower(0.5);
             backLeftMotor.setPower(0.5);
             backRightMotor.setPower(-0.5);
             idle();
+        }
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        if(colorSensor.red() + 200 < colorSensor.blue()){
+            //this is blue side, drive forward and press
+            frontLeftMotor.setPower(0.25);
+            frontRightMotor.setPower(0.25);
+            backLeftMotor.setPower(0.25);
+            backRightMotor.setPower(0.25);
+            sleep(500);
+            frontLeftMotor.setPower(-0.5);
+            frontRightMotor.setPower(0.5);
+            backLeftMotor.setPower(0.5);
+            backRightMotor.setPower(-0.5);
+            sleep(3000);
+        } else if (colorSensor.blue() + 200 < colorSensor.red()){
+            //this is red side, press
+            frontLeftMotor.setPower(-0.35);
+            frontRightMotor.setPower(0.35);
+            backLeftMotor.setPower(0.35);
+            backRightMotor.setPower(-0.35);
+            sleep(3000);
         }
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
