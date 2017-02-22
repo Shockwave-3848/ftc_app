@@ -79,8 +79,8 @@ public class ShockwaveDrive extends OpMode {
         launchMotor.setDirection(DcMotor.Direction.REVERSE);
         forkliftServoL.setDirection(Servo.Direction.FORWARD);
         forkliftServoR.setDirection(Servo.Direction.REVERSE);
-        forkliftServoL.setPosition(80);
-        forkliftServoR.setPosition(80);
+        forkliftServoL.setPosition(1); //80
+        forkliftServoR.setPosition(1); //80
         telemetry.addData("Status", "Initialized");
         telemetry.update();
     }
