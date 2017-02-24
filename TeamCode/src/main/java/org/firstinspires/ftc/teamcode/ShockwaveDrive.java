@@ -34,6 +34,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -73,6 +74,7 @@ public class ShockwaveDrive extends OpMode {
         liftMotor = hardwareMap.dcMotor.get("liftMotor");
         forkliftServoL = hardwareMap.servo.get("forkliftServoL");
         forkliftServoR = hardwareMap.servo.get("forkliftServoR");
+        ColorSensor colorSensor = hardwareMap.colorSensor.get("colorSensor");
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         backRightMotor.setDirection(DcMotor.Direction.FORWARD);
         flickerMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -251,6 +253,7 @@ public class ShockwaveDrive extends OpMode {
         } else {
             mecanumDriveSpeed = (float) 0.5;
         }
+
         telemetry.update();
     }
 
