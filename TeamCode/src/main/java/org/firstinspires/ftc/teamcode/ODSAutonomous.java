@@ -5,22 +5,23 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by Morgan on 2/7/2017.
  */
-@Autonomous(name = "Shockwave: ODSAutonomous", group = "Shockwave")
+@Autonomous(name = "Shockwave: Red Beacon Autonomous", group = "Shockwave")
 public class ODSAutonomous extends LinearOpMode {
     //init motors
     DcMotor frontLeftMotor;
     DcMotor frontRightMotor;
     DcMotor backLeftMotor;
     DcMotor backRightMotor;
-
-    public float redVal;
-    public float blueVal;
+    private Servo forkliftServoL;
+    private Servo forkliftServoR;
 
     private boolean beaconOnePress = false;
+    private boolean beaconTwoPress = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -29,111 +30,83 @@ public class ODSAutonomous extends LinearOpMode {
         frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
         backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
+        forkliftServoL = hardwareMap.servo.get("forkliftServoL");
+        forkliftServoR = hardwareMap.servo.get("forkliftServoR");
+        forkliftServoL.setDirection(Servo.Direction.FORWARD);
+        forkliftServoR.setDirection(Servo.Direction.REVERSE);
+        forkliftServoL.setPosition(1);
+        forkliftServoR.setPosition(1);
+
         //reverse motors
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         backRightMotor.setDirection(DcMotor.Direction.REVERSE);
-        //set runmode //TODO
-        /*
-        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        */
+
         //set ods
         OpticalDistanceSensor ods = hardwareMap.opticalDistanceSensor.get("ods");
+
         //set color sensor
         ColorSensor colorSensor = hardwareMap.colorSensor.get("colorSensor");
+
         //wait for coach to press start
         waitForStart();
 
-        //run
-        //set runmode //TODO
-        /*
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //drive to line up with beacons
-        frontLeftMotor.setPower(0.25);
-        frontRightMotor.setPower(0.25);
-        backLeftMotor.setPower(0.25);
-        backRightMotor.setPower(0.25);
-        setPosition(3360);
-        sleep(4000);
-        //turn back to position
-        frontLeftMotor.setTargetPosition(5600);
-        backLeftMotor.setTargetPosition(5600);
-        sleep(1600);
-        //drive forward to be level with beacon
-        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        sleep(500);
-        setPosition(2240);
-        sleep(1500);
-        frontLeftMotor.setPower(0);
-        frontRightMotor.setPower(0);
-        backLeftMotor.setPower(0);
-        backRightMotor.setPower(0);
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        */
         //drive forward from wall
-        driveForward(0.25, 2100);
-        sleep(1000);
-        //turn to be parallel with the wall5
+        driveForward(0.5, 1500);
+        sleep(750);
+
+        //turn to be parallel with the wall
         frontLeftMotor.setPower(0.5);
         frontRightMotor.setPower(0);
         backLeftMotor.setPower(0.5);
         backRightMotor.setPower(0);
-        sleep(900);
+        sleep(850);
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
-        sleep(1000);
-        //check color
+        sleep(500);
+
+        //drive forard toward beacon
+        //driveForward(0.5, 500);
+        //sleep(500);
+
+        //slide
+        frontLeftMotor.setPower(-0.5);
+        frontRightMotor.setPower(0.5);
+        backLeftMotor.setPower(0.5);
+        backRightMotor.setPower(-0.5);
+        sleep(500);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+
+        //press first beacon
+        /*
         while (beaconOnePress != true){
             if ((colorSensor.red() - 100) > colorSensor.blue()){
-                /*
-                frontLeftMotor.setPower(0.25);
-                frontRightMotor.setPower(0.25);
-                backLeftMotor.setPower(0.25);
-                backRightMotor.setPower(0.25);
-                sleep(250);
-                frontLeftMotor.setPower(0);
-                frontRightMotor.setPower(0);
-                backLeftMotor.setPower(0);
-                backRightMotor.setPower(0);
-                */
                 sleep(500);
                 frontLeftMotor.setPower(-0.5);
                 frontRightMotor.setPower(0.5);
                 backLeftMotor.setPower(0.5);
                 backRightMotor.setPower(-0.5);
-                sleep(3000);
+                sleep(1650);
                 frontLeftMotor.setPower(0.5);
                 frontRightMotor.setPower(-0.5);
                 backLeftMotor.setPower(-0.5);
                 backRightMotor.setPower(0.5);
-                sleep(3000);
+                sleep(800);
                 frontLeftMotor.setPower(0);
                 frontRightMotor.setPower(0);
                 backLeftMotor.setPower(0);
                 backRightMotor.setPower(0);
+                beaconOnePress = true;
             } else {
-                setPosition(3360);
-                frontLeftMotor.setPower(0.25);
-                frontRightMotor.setPower(0.25);
-                backLeftMotor.setPower(0.25);
-                backRightMotor.setPower(0.25);
+                //move forward
+                frontLeftMotor.setPower(0.3);
+                frontRightMotor.setPower(0.3);
+                backLeftMotor.setPower(0.3);
+                backRightMotor.setPower(0.3);
                 sleep(250);
                 frontLeftMotor.setPower(0);
                 frontRightMotor.setPower(0);
@@ -143,73 +116,218 @@ public class ODSAutonomous extends LinearOpMode {
             telemetry.addData("Red", colorSensor.red());
             telemetry.addData("Blue", colorSensor.blue());
             telemetry.update();
-            sleep(1500);
+            sleep(1000);
         }
-        /*
-        while (beaconOnePress != true){
-            if ((colorSensor.red() - 300) > colorSensor.blue()){
+        */
+
+        for(int i = 0; i < 5; i++){
+            if ((colorSensor.red() - 100) > colorSensor.blue()){
+                sleep(500);
                 frontLeftMotor.setPower(-0.5);
                 frontRightMotor.setPower(0.5);
                 backLeftMotor.setPower(0.5);
                 backRightMotor.setPower(-0.5);
-                sleep(3000);
+                sleep(1650);
                 frontLeftMotor.setPower(0.5);
                 frontRightMotor.setPower(-0.5);
                 backLeftMotor.setPower(-0.5);
                 backRightMotor.setPower(0.5);
-                sleep(3000);
+                sleep(800);
                 frontLeftMotor.setPower(0);
                 frontRightMotor.setPower(0);
                 backLeftMotor.setPower(0);
                 backRightMotor.setPower(0);
+                beaconOnePress = true;
+                break;
             } else {
-                frontLeftMotor.setPower(0.25);
-                frontRightMotor.setPower(0.25);
-                backLeftMotor.setPower(0.25);
-                backRightMotor.setPower(0.25);
-                sleep(2000);
+                //move forward
+                frontLeftMotor.setPower(0.3);
+                frontRightMotor.setPower(0.3);
+                backLeftMotor.setPower(0.3);
+                backRightMotor.setPower(0.3);
+                sleep(250);
                 frontLeftMotor.setPower(0);
                 frontRightMotor.setPower(0);
                 backLeftMotor.setPower(0);
                 backRightMotor.setPower(0);
             }
+            telemetry.addData("Red", colorSensor.red());
+            telemetry.addData("Blue", colorSensor.blue());
+            telemetry.update();
+            sleep(1000);
         }
-        */
-        /*
-        if(colorSensor.red() + 200 < colorSensor.blue()){
-            //this is blue side, drive forward and press
-            frontLeftMotor.setPower(0.25);
-            frontRightMotor.setPower(0.25);
-            backLeftMotor.setPower(0.25);
-            backRightMotor.setPower(0.25);
-            sleep(500);
-            frontLeftMotor.setPower(-0.5);
-            frontRightMotor.setPower(0.5);
-            backLeftMotor.setPower(0.5);
-            backRightMotor.setPower(-0.5);
-            sleep(3000);
-        } else if (colorSensor.blue() + 200 < colorSensor.red()){
-            //this is red side, press
-            frontLeftMotor.setPower(-0.35);
-            frontRightMotor.setPower(0.35);
-            backLeftMotor.setPower(0.35);
-            backRightMotor.setPower(-0.35);
-            sleep(3000);
-        }
-        */
+
+        //turn to be parallel with the wall
+        frontLeftMotor.setPower(0.25);
+        frontRightMotor.setPower(-0.25);
+        backLeftMotor.setPower(0.25);
+        backRightMotor.setPower(-0.25);
+        sleep(200);
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
 
-        //Update telemetry on color values
-        while (opModeIsActive()) {
-            telemetry.addData("Red", redVal);
-            telemetry.addData("Blue", blueVal);
-            telemetry.update();
+        //check to make sure beacon is the correct color
+        if ((colorSensor.blue() - 100) > colorSensor.red()) {
+            sleep(5000);
+            frontLeftMotor.setPower(-0.5);
+            frontRightMotor.setPower(0.5);
+            backLeftMotor.setPower(0.5);
+            backRightMotor.setPower(-0.5);
+            sleep(1500);
+            frontLeftMotor.setPower(0.5);
+            frontRightMotor.setPower(-0.5);
+            backLeftMotor.setPower(-0.5);
+            backRightMotor.setPower(0.5);
+            sleep(800);
+            frontLeftMotor.setPower(0);
+            frontRightMotor.setPower(0);
+            backLeftMotor.setPower(0);
+            backRightMotor.setPower(0);
+            sleep(500);
+            //turn to parallel with the wall
+            frontLeftMotor.setPower(0.25);
+            frontRightMotor.setPower(-0.25);
+            backLeftMotor.setPower(0.25);
+            backRightMotor.setPower(-0.25);
+            sleep(100);
+            frontLeftMotor.setPower(0);
+            frontRightMotor.setPower(0);
+            backLeftMotor.setPower(0);
+            backRightMotor.setPower(0);
+            //drive two second beacon
+            driveForward(0.5, 1250);
+            sleep(750);
+        } else {
+            //drive to second beacon
+            driveForward(0.5, 1250);
+            sleep(750);
         }
-    }
 
+        //slide closer to the wall
+        frontLeftMotor.setPower(-0.5);
+        frontRightMotor.setPower(0.5);
+        backLeftMotor.setPower(0.5);
+        backRightMotor.setPower(-0.5);
+        sleep(1000);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+
+        //press second beacon
+        /*
+        while (beaconTwoPress != true && beaconOnePress == true){
+            if ((colorSensor.red() - 100) > colorSensor.blue()){
+                sleep(500);
+                frontLeftMotor.setPower(-0.5);
+                frontRightMotor.setPower(0.5);
+                backLeftMotor.setPower(0.5);
+                backRightMotor.setPower(-0.5);
+                sleep(1650);
+                frontLeftMotor.setPower(0.5);
+                frontRightMotor.setPower(-0.5);
+                backLeftMotor.setPower(-0.5);
+                backRightMotor.setPower(0.5);
+                sleep(1000);
+                frontLeftMotor.setPower(0);
+                frontRightMotor.setPower(0);
+                backLeftMotor.setPower(0);
+                backRightMotor.setPower(0);
+                beaconTwoPress = true;
+            } else {
+                //move forward
+                frontLeftMotor.setPower(0.3);
+                frontRightMotor.setPower(0.3);
+                backLeftMotor.setPower(0.3);
+                backRightMotor.setPower(0.3);
+                sleep(250);
+                frontLeftMotor.setPower(0);
+                frontRightMotor.setPower(0);
+                backLeftMotor.setPower(0);
+                backRightMotor.setPower(0);
+            }
+            telemetry.addData("Red", colorSensor.red());
+            telemetry.addData("Blue", colorSensor.blue());
+            telemetry.update();
+            sleep(1000);
+        }
+        */
+
+        for(int i = 0; i < 5; i++){
+            if ((colorSensor.red() - 100) > colorSensor.blue()){
+                sleep(500);
+                frontLeftMotor.setPower(-0.5);
+                frontRightMotor.setPower(0.5);
+                backLeftMotor.setPower(0.5);
+                backRightMotor.setPower(-0.5);
+                sleep(1650);
+                frontLeftMotor.setPower(0.5);
+                frontRightMotor.setPower(-0.5);
+                backLeftMotor.setPower(-0.5);
+                backRightMotor.setPower(0.5);
+                sleep(800);
+                frontLeftMotor.setPower(0);
+                frontRightMotor.setPower(0);
+                backLeftMotor.setPower(0);
+                backRightMotor.setPower(0);
+                beaconTwoPress = true;
+                break;
+            } else {
+                //move forward
+                frontLeftMotor.setPower(0.3);
+                frontRightMotor.setPower(0.3);
+                backLeftMotor.setPower(0.3);
+                backRightMotor.setPower(0.3);
+                sleep(250);
+                frontLeftMotor.setPower(0);
+                frontRightMotor.setPower(0);
+                backLeftMotor.setPower(0);
+                backRightMotor.setPower(0);
+            }
+            telemetry.addData("Red", colorSensor.red());
+            telemetry.addData("Blue", colorSensor.blue());
+            telemetry.update();
+            sleep(1000);
+        }
+
+        //check to make sure beacon is the correct color
+        if ((colorSensor.blue() - 100) > colorSensor.red()) {
+            sleep(5000);
+            frontLeftMotor.setPower(-0.5);
+            frontRightMotor.setPower(0.5);
+            backLeftMotor.setPower(0.5);
+            backRightMotor.setPower(-0.5);
+            sleep(1500);
+            frontLeftMotor.setPower(0.5);
+            frontRightMotor.setPower(-0.5);
+            backLeftMotor.setPower(-0.5);
+            backRightMotor.setPower(0.5);
+            sleep(800);
+            frontLeftMotor.setPower(0);
+            frontRightMotor.setPower(0);
+            backLeftMotor.setPower(0);
+            backRightMotor.setPower(0);
+            sleep(500);
+            //turn to parallel with the wall
+            frontLeftMotor.setPower(0.25);
+            frontRightMotor.setPower(-0.25);
+            backLeftMotor.setPower(0.25);
+            backRightMotor.setPower(-0.25);
+            sleep(100);
+            frontLeftMotor.setPower(0);
+            frontRightMotor.setPower(0);
+            backLeftMotor.setPower(0);
+            backRightMotor.setPower(0);
+        }
+
+        //set all motor power to zero
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+    }
     void setPosition(int position) {
         frontLeftMotor.setTargetPosition(position);
         frontRightMotor.setTargetPosition(position);
@@ -239,43 +357,5 @@ public class ODSAutonomous extends LinearOpMode {
         frontRightMotor.setPower(0);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
-    }
-
-    void colorCheck() {
-        if ((redVal - 200) > blueVal){
-            frontLeftMotor.setPower(-1);
-            frontRightMotor.setPower(1);
-            backLeftMotor.setPower(1);
-            backRightMotor.setPower(-1);
-            sleep(3000);
-            frontLeftMotor.setPower(0.5);
-            frontRightMotor.setPower(-0.5);
-            backLeftMotor.setPower(-0.5);
-            backRightMotor.setPower(0.5);
-            sleep(3000);
-            frontLeftMotor.setPower(0);
-            frontRightMotor.setPower(0);
-            backLeftMotor.setPower(0);
-            backRightMotor.setPower(0);
-        } else {
-            setPosition(3360);
-            frontLeftMotor.setPower(0.25);
-            frontRightMotor.setPower(0.25);
-            backLeftMotor.setPower(0.25);
-            backRightMotor.setPower(0.25);
-            sleep(500);
-            frontLeftMotor.setPower(0);
-            frontRightMotor.setPower(0);
-            backLeftMotor.setPower(0);
-            backRightMotor.setPower(0);
-        }
-    }
-
-    void telemetryUpdate(){
-        //redVal = colorSensor.red();
-        //blueVal = colorSensor.blue();
-        telemetry.addData("Red", redVal);
-        telemetry.addData("Blue", blueVal);
-        telemetry.update();
     }
 }

@@ -87,8 +87,8 @@ public class RedShootAutonomous extends LinearOpMode {
         launchMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         forkliftServoL.setDirection(Servo.Direction.FORWARD);
         forkliftServoR.setDirection(Servo.Direction.REVERSE);
-        forkliftServoL.setPosition(80);
-        forkliftServoR.setPosition(80);
+        forkliftServoL.setPosition(-0.5);
+        forkliftServoR.setPosition(-0.5);
         driveWheels.add(frontLeftMotor);
         driveWheels.add(frontRightMotor);
         driveWheels.add(backLeftMotor);
@@ -149,7 +149,7 @@ public class RedShootAutonomous extends LinearOpMode {
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
 
-        drive(1000, driveWheels);
+        drive(1500, driveWheels);
 
         sleep(20000);
     }

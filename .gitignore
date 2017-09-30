@@ -26,3 +26,7 @@ build/
 
 *ASUS_PC_01*
 
+FtcRobotController/build.gradle
+*.gradle
+TeamCode/src/main/java/org/firstinspires/ftc/teamcode/BlueShootAutonomousSLEEP.java
+*.java

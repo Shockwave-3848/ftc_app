@@ -81,8 +81,8 @@ public class ShockwaveDrive extends OpMode {
         launchMotor.setDirection(DcMotor.Direction.REVERSE);
         forkliftServoL.setDirection(Servo.Direction.FORWARD);
         forkliftServoR.setDirection(Servo.Direction.REVERSE);
-        forkliftServoL.setPosition(1); //80
-        forkliftServoR.setPosition(1); //80
+        forkliftServoL.setPosition(-0.5); //80
+        forkliftServoR.setPosition(-0.5); //80
         telemetry.addData("Status", "Initialized");
         telemetry.update();
     }
@@ -114,44 +114,51 @@ public class ShockwaveDrive extends OpMode {
         }
         /* end elevator motor setting */
 
+        if(!gamepad2.left_bumper) {
         /* drive mapping */
-        frontLeftPower = gamepad1.left_stick_y;
-        backLeftPower = gamepad1.left_stick_y;
-        frontRightPower = gamepad1.right_stick_y;
-        backRightPower = gamepad1.right_stick_y;
+            frontLeftPower = gamepad1.left_stick_y;
+            backLeftPower = gamepad1.left_stick_y;
+            frontRightPower = gamepad1.right_stick_y;
+            backRightPower = gamepad1.right_stick_y;
 
-        if (gamepad1.right_trigger > 0.2) {
-            frontLeftPower = gamepad1.left_stick_y / 4;
-            backLeftPower = gamepad1.left_stick_y / 4;
-            frontRightPower = gamepad1.right_stick_y / 4;
-            backRightPower = gamepad1.right_stick_y / 4;
-        }
+            if (gamepad1.right_trigger > 0.2) {
+                frontLeftPower = gamepad1.left_stick_y / 4;
+                backLeftPower = gamepad1.left_stick_y / 4;
+                frontRightPower = gamepad1.right_stick_y / 4;
+                backRightPower = gamepad1.right_stick_y / 4;
+            }
 
-        if (gamepad1.dpad_up) {
-            frontLeftPower = (float) 0.15;
-            frontRightPower = (float) 0.15;
-            backLeftPower = (float) 0.15;
-            backRightPower = (float) 0.15;
-        }
-        if (gamepad1.dpad_down) {
-            frontLeftPower = (float) -0.15;
-            frontRightPower = (float) -0.15;
-            backLeftPower = (float) -0.15;
-            backRightPower = (float) -0.15;
-        }
-        if (gamepad1.dpad_right) {
-            frontLeftPower = (float) 0.15;
-            frontRightPower = (float) -0.15;
-            backLeftPower = (float) -0.15;
-            backRightPower = (float) 0.15;
-        }
-        if (gamepad1.dpad_left) {
-            frontLeftPower = (float) -0.15;
-            frontRightPower = (float) 0.15;
-            backLeftPower = (float) 0.15;
-            backRightPower = (float) -0.15;
-        }
+            if (gamepad1.dpad_up) {
+                frontLeftPower = (float) 0.15;
+                frontRightPower = (float) 0.15;
+                backLeftPower = (float) 0.15;
+                backRightPower = (float) 0.15;
+            }
+            if (gamepad1.dpad_down) {
+                frontLeftPower = (float) -0.15;
+                frontRightPower = (float) -0.15;
+                backLeftPower = (float) -0.15;
+                backRightPower = (float) -0.15;
+            }
+            if (gamepad1.dpad_right) {
+                frontLeftPower = (float) 0.15;
+                frontRightPower = (float) -0.15;
+                backLeftPower = (float) -0.15;
+                backRightPower = (float) 0.15;
+            }
+            if (gamepad1.dpad_left) {
+                frontLeftPower = (float) -0.15;
+                frontRightPower = (float) 0.15;
+                backLeftPower = (float) 0.15;
+                backRightPower = (float) -0.15;
+            }
         /* end drive mapping */
+        }else{
+            frontLeftPower = 0;
+            backLeftPower = 0;
+            frontRightPower = 0;
+            backRightPower = 0;
+        }
 
         /* launch motor setting*/
         if (gamepad2.right_trigger > 0.1) {
@@ -193,8 +200,8 @@ public class ShockwaveDrive extends OpMode {
 
         /* forklift release */
         if (gamepad1.left_bumper) {
-            forkliftServoL.setPosition(0);
-            forkliftServoR.setPosition(0);
+            forkliftServoL.setPosition(0.5);
+            forkliftServoR.setPosition(0.5);
         }
 
         /* end forklift release */

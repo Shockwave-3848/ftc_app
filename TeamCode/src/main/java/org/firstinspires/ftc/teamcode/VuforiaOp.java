@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.vuforia.HINT;
@@ -17,7 +16,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 /**
  * Created by Morgan on 2/7/2017.
  */
-@Autonomous(name = "Shockwave: VuforiaAutonomous", group = "Shockwave")
+//@Autonomous(name = "Shockwave: VuforiaAutonomous", group = "Shockwave")
 public class VuforiaOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
